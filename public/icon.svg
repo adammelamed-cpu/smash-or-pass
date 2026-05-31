@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#0a0e14"/>
+  <polygon points="256,72 96,400 416,400" fill="#1a3a5c"/>
+  <polygon points="256,72 168,220 344,220" fill="#e8f4ff" opacity="0.92"/>
+  <polygon points="355,175 285,400 425,400" fill="#0d2d4a"/>
+  <circle cx="256" cy="148" r="22" fill="#00BFFF" opacity="0.9"/>
+  <line x1="256" y1="126" x2="256" y2="86" stroke="#00BFFF" stroke-width="6" stroke-linecap="round"/>
+  <line x1="256" y1="170" x2="256" y2="210" stroke="#00BFFF" stroke-width="6" stroke-linecap="round"/>
+  <line x1="234" y1="148" x2="194" y2="148" stroke="#00BFFF" stroke-width="6" stroke-linecap="round"/>
+  <line x1="278" y1="148" x2="318" y2="148" stroke="#00BFFF" stroke-width="6" stroke-linecap="round"/>
+  <line x1="241" y1="133" x2="213" y2="105" stroke="#00BFFF" stroke-width="5" stroke-linecap="round"/>
+  <line x1="271" y1="163" x2="299" y2="191" stroke="#00BFFF" stroke-width="5" stroke-linecap="round"/>
+  <line x1="271" y1="133" x2="299" y2="105" stroke="#00BFFF" stroke-width="5" stroke-linecap="round"/>
+  <line x1="241" y1="163" x2="213" y2="191" stroke="#00BFFF" stroke-width="5" stroke-linecap="round"/>
+</svg>

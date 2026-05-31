@@ -1,0 +1,25 @@
+{
+  "name": "Ski Day Briefing",
+  "short_name": "SkiBrief",
+  "description": "Live ski day briefings with OpenSnow, traffic, parking & party coordination",
+  "start_url": "/?utm_source=pwa",
+  "display": "standalone",
+  "background_color": "#0a0e14",
+  "theme_color": "#0a0e14",
+  "orientation": "any",
+  "categories": ["sports", "weather", "travel"],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
