@@ -1,6 +1,10 @@
 {
   "name": "ski-day-briefing",
   "version": "1.0.0",
-  "description": "Ikon Pass ski day briefing app",
-  "engines": { "node": "24.x" }
+  "description": "Personalized ski day briefing app with crew coordination",
+  "engines": { "node": "24.x" },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.46.2",
+    "twilio": "^5.3.7"
+  }
 }

@@ -3,9 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Ski Day Briefing</title>
-
-<!-- PWA -->
+<title>SkiBrief</title>
 <meta name="theme-color" content="#0a0e14" />
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -13,7 +11,6 @@
 <meta name="apple-mobile-web-app-title" content="SkiBrief" />
 <link rel="manifest" href="/manifest.json" />
 <link rel="apple-touch-icon" href="/icon.svg" />
-
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -28,33 +25,27 @@
     padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
   }
 
-  /* Hero */
-  .hero { position: relative; height: 300px; overflow: hidden; display: flex; align-items: flex-end; }
+  /* ── HERO ─────────────────────────────── */
+  .hero { position: relative; height: 280px; overflow: hidden; display: flex; align-items: flex-end; }
   .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.42) saturate(1.15); transition: opacity 0.9s ease; }
   .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, #0a0e14 0%, rgba(10,14,20,0.3) 60%, transparent 100%); }
-  .hero-content { position: relative; padding: 0 28px 28px; width: 100%; }
-  .hero-eyebrow { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #00BFFF; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+  .hero-content { position: relative; padding: 0 28px 26px; width: 100%; }
+  .hero-eyebrow { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #00BFFF; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .hero-os-badge { display: inline-flex; align-items: center; gap: 4px; background: rgba(0,191,255,0.15); border: 1px solid rgba(0,191,255,0.3); border-radius: 3px; padding: 2px 7px; font-size: 9px; font-weight: 700; letter-spacing: 0.12em; color: #00BFFF; text-decoration: none; }
-  .hero-os-badge:hover { background: rgba(0,191,255,0.25); }
-  .hero-title { font-family: 'Barlow Condensed', sans-serif; font-size: 52px; font-weight: 800; line-height: 0.95; text-transform: uppercase; color: #fff; margin: 0 0 6px; }
+  .hero-title { font-family: 'Barlow Condensed', sans-serif; font-size: 48px; font-weight: 800; line-height: 0.95; text-transform: uppercase; color: #fff; margin: 0 0 6px; }
   .hero-sub { font-size: 13px; font-weight: 300; color: rgba(255,255,255,0.55); }
 
-  /* Controls */
-  .controls { background: #111620; border-bottom: 1px solid rgba(255,255,255,0.07); padding: 18px 28px; display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
+  /* ── CONTROLS ─────────────────────────── */
+  .controls { background: #111620; border-bottom: 1px solid rgba(255,255,255,0.07); padding: 16px 28px; display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
   .field-group { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 140px; }
   .field-label { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.38); }
   .field-input { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 4px; color: #e8edf2; font-family: 'Barlow', sans-serif; font-size: 13px; padding: 9px 12px; outline: none; width: 100%; transition: border-color 0.2s; }
   .field-input:focus { border-color: #00BFFF; }
   .field-input::placeholder { color: rgba(255,255,255,0.22); }
   .field-input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.6); cursor: pointer; }
-
-  /* Resort badge */
   .resort-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(0,191,255,0.12); border: 1px solid rgba(0,191,255,0.35); border-radius: 4px; padding: 8px 12px; font-size: 13px; color: #00BFFF; font-weight: 500; cursor: default; }
   .resort-badge-state { opacity: 0.5; font-size: 11px; }
-  .resort-badge-remove { background: none; border: none; cursor: pointer; color: rgba(0,191,255,0.55); font-size: 17px; line-height: 1; padding: 0; margin-left: 2px; transition: color 0.15s; }
-  .resort-badge-remove:hover { color: #00BFFF; }
-
-  /* Dropdown */
+  .resort-badge-remove { background: none; border: none; cursor: pointer; color: rgba(0,191,255,0.55); font-size: 17px; line-height: 1; padding: 0; margin-left: 2px; }
   .dropdown-wrap { position: relative; }
   .dropdown { position: absolute; top: calc(100% + 5px); left: 0; right: 0; z-index: 300; background: #1a2030; border: 1px solid rgba(255,255,255,0.13); border-radius: 6px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.7); }
   .dropdown-item { padding: 11px 14px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; color: #c8d4e0; transition: background 0.1s; }
@@ -66,38 +57,28 @@
   .tag-ua { background: rgba(168,255,120,0.12); color: #A8FF78; border: 1px solid rgba(168,255,120,0.28); }
   .tag-st { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.42); border: 1px solid rgba(255,255,255,0.1); }
   .dropdown-empty { padding: 13px 14px; color: rgba(255,255,255,0.28); font-size: 13px; }
-
-  /* CTA */
   .cta-btn { background: #00BFFF; border: none; border-radius: 4px; color: #0a0e14; font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; padding: 11px 24px; cursor: pointer; display: flex; align-items: center; gap: 7px; white-space: nowrap; transition: background 0.18s, opacity 0.18s; align-self: flex-end; }
   .cta-btn:hover:not(:disabled) { background: #33CCFF; }
   .cta-btn:disabled { opacity: 0.38; cursor: not-allowed; }
 
-  /* OpenSnow Panel */
-  .opensnow-panel { background: linear-gradient(to right, rgba(0,65,115,0.45), rgba(0,191,255,0.05)); border-bottom: 1px solid rgba(0,191,255,0.18); padding: 11px 28px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-  .os-badge { display: flex; align-items: center; gap: 5px; background: rgba(0,191,255,0.14); border: 1px solid rgba(0,191,255,0.35); border-radius: 4px; padding: 5px 10px; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #00BFFF; flex-shrink: 0; }
+  /* ── OPENSNOW + TRAFFIC ───────────────── */
+  .opensnow-panel { background: linear-gradient(to right, rgba(0,65,115,0.45), rgba(0,191,255,0.05)); border-bottom: 1px solid rgba(0,191,255,0.18); padding: 10px 28px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .os-badge { display: flex; align-items: center; gap: 5px; background: rgba(0,191,255,0.14); border: 1px solid rgba(0,191,255,0.35); border-radius: 4px; padding: 4px 9px; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #00BFFF; flex-shrink: 0; }
   .os-links { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; flex: 1; }
-  .os-link { font-size: 12px; color: rgba(160,220,255,0.75); text-decoration: none; transition: color 0.15s; letter-spacing: 0.03em; }
+  .os-link { font-size: 12px; color: rgba(160,220,255,0.75); text-decoration: none; transition: color 0.15s; }
   .os-link:hover { color: #00BFFF; }
   .os-divider { color: rgba(255,255,255,0.15); font-size: 11px; }
   .os-powered { font-size: 10px; color: rgba(255,255,255,0.18); margin-left: auto; white-space: nowrap; font-style: italic; }
-
-  /* Traffic Panel */
   .traffic-panel { background: rgba(255,107,53,0.04); border-bottom: 1px solid rgba(255,107,53,0.1); padding: 8px 28px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .traffic-header { display: flex; align-items: center; gap: 5px; font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,107,53,0.7); flex-shrink: 0; }
   .traffic-chips { display: flex; gap: 5px; flex-wrap: wrap; }
   .traffic-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: rgba(255,130,70,0.8); border: 1px solid rgba(255,107,53,0.22); border-radius: 3px; padding: 4px 9px; text-decoration: none; background: none; transition: all 0.15s; font-family: 'Barlow', sans-serif; white-space: nowrap; }
-  .traffic-chip:hover { background: rgba(255,107,53,0.1); color: #FF8040; border-color: rgba(255,107,53,0.4); }
+  .traffic-chip:hover { background: rgba(255,107,53,0.1); color: #FF8040; }
   .traffic-chip-nav { color: rgba(100,210,100,0.8); border-color: rgba(100,200,100,0.2); }
-  .traffic-chip-nav:hover { background: rgba(100,200,100,0.1); color: #A8FF78; border-color: rgba(168,255,120,0.4); }
+  .traffic-chip-nav:hover { background: rgba(100,200,100,0.1); color: #A8FF78; }
 
-  /* Notification bar */
-  .notif-bar { margin: 12px 28px 0; padding: 10px 14px; background: rgba(0,191,255,0.05); border: 1px solid rgba(0,191,255,0.15); border-radius: 6px; display: flex; align-items: center; gap: 10px; font-size: 12px; color: rgba(160,220,255,0.7); }
-  .notif-bar-btn { margin-left: auto; background: rgba(0,191,255,0.14); border: 1px solid rgba(0,191,255,0.28); border-radius: 4px; padding: 4px 11px; font-size: 11px; font-weight: 600; color: #00BFFF; cursor: pointer; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; transition: background 0.15s; }
-  .notif-bar-btn:hover { background: rgba(0,191,255,0.25); }
-  .notif-bar.confirmed { background: rgba(168,255,120,0.05); border-color: rgba(168,255,120,0.15); color: rgba(168,255,120,0.65); }
-
-  /* Quick links */
-  .quick-links { padding: 11px 28px; display: flex; gap: 8px; flex-wrap: wrap; border-bottom: 1px solid rgba(255,255,255,0.05); background: #0d1118; }
+  /* ── QUICK LINKS ──────────────────────── */
+  .quick-links { padding: 10px 28px; display: flex; gap: 8px; flex-wrap: wrap; border-bottom: 1px solid rgba(255,255,255,0.05); background: #0d1118; }
   .ql-btn { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 500; font-family: 'Barlow', sans-serif; padding: 5px 11px; border-radius: 3px; border: 1px solid; text-decoration: none; letter-spacing: 0.04em; transition: opacity 0.15s; cursor: pointer; background: none; }
   .ql-btn:hover { opacity: 0.72; }
   .ql-cyan   { color: #00BFFF; border-color: rgba(0,191,255,0.3); }
@@ -105,45 +86,33 @@
   .ql-amber  { color: #FFD700; border-color: rgba(255,215,0,0.3); }
   .ql-orange { color: #FF6B35; border-color: rgba(255,107,53,0.3); }
 
-  /* Tahoe notice */
-  .tahoe-notice { margin: 14px 28px 0; background: rgba(255,107,53,0.08); border: 1px solid rgba(255,107,53,0.25); border-radius: 6px; padding: 11px 15px; font-size: 12px; color: rgba(255,180,130,0.9); display: flex; gap: 9px; align-items: flex-start; line-height: 1.6; }
-  .tahoe-notice a { color: #FF9A6C; text-decoration: none; font-weight: 600; }
-  .tahoe-notice a:hover { text-decoration: underline; }
-
-  /* Result header */
-  .result-header { padding: 18px 28px 0; }
-  .result-pill { display: inline-flex; align-items: center; gap: 6px; background: rgba(168,255,120,0.1); border: 1px solid rgba(168,255,120,0.25); border-radius: 20px; padding: 5px 14px; font-size: 11px; color: #A8FF78; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.09em; text-transform: uppercase; }
-
-  /* Cards */
+  /* ── BRIEFING CARDS ───────────────────── */
   .cards { padding: 18px 28px 24px; display: flex; flex-direction: column; gap: 2px; }
   .section-card { background: #111620; border-bottom: 1px solid rgba(255,255,255,0.05); overflow: hidden; }
   .section-card:first-child { border-radius: 8px 8px 0 0; }
   .section-card:last-child  { border-radius: 0 0 8px 8px; border-bottom: none; }
-  .card-header { display: flex; align-items: center; justify-content: space-between; padding: 15px 18px 0; gap: 10px; flex-wrap: wrap; }
+  .card-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px 0; gap: 10px; flex-wrap: wrap; }
   .card-label-group { display: flex; align-items: center; gap: 9px; }
   .card-icon { width: 28px; height: 28px; border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .card-title { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.11em; text-transform: uppercase; }
   .card-links { display: flex; gap: 6px; flex-wrap: wrap; }
   .card-body { padding: 11px 18px 17px; font-size: 13px; line-height: 1.8; color: rgba(220,232,242,0.82); white-space: pre-wrap; }
   .card-body-empty { color: rgba(255,255,255,0.18); font-style: italic; }
-
-  /* Pulse loader */
   .pulse-row { display: flex; gap: 5px; align-items: center; padding: 13px 18px 17px; }
   .pulse-dot { width: 5px; height: 5px; border-radius: 50%; animation: pulse-anim 1.1s ease-in-out infinite; }
   .pulse-dot:nth-child(2) { animation-delay: 0.16s; }
   .pulse-dot:nth-child(3) { animation-delay: 0.32s; }
   @keyframes pulse-anim { 0%,100%{opacity:.12} 50%{opacity:1} }
   .pulse-label { font-size: 12px; color: rgba(255,255,255,0.28); margin-left: 5px; }
-
-  /* Error */
   .error-bar { margin: 14px 28px 0; background: rgba(255,80,80,0.1); border: 1px solid rgba(255,80,80,0.3); border-radius: 6px; padding: 11px 15px; font-size: 13px; color: #ff9090; display: flex; align-items: center; gap: 8px; }
-
-  /* Empty */
-  .empty { padding: 56px 28px; text-align: center; }
+  .empty { padding: 48px 28px; text-align: center; }
   .empty-icon { font-size: 44px; color: rgba(255,255,255,0.09); display: block; margin-bottom: 14px; }
   .empty-text { font-size: 13px; color: rgba(255,255,255,0.28); line-height: 1.8; }
+  .result-pill { display: inline-flex; align-items: center; gap: 6px; background: rgba(168,255,120,0.1); border: 1px solid rgba(168,255,120,0.25); border-radius: 20px; padding: 5px 14px; font-size: 11px; color: #A8FF78; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.09em; text-transform: uppercase; }
+  .tahoe-notice { margin: 12px 28px 0; background: rgba(255,107,53,0.08); border: 1px solid rgba(255,107,53,0.25); border-radius: 6px; padding: 11px 15px; font-size: 12px; color: rgba(255,180,130,0.9); display: flex; gap: 9px; align-items: flex-start; line-height: 1.6; }
+  .tahoe-notice a { color: #FF9A6C; text-decoration: none; font-weight: 600; }
 
-  /* Address autocomplete */
+  /* ── ADDRESS AUTOCOMPLETE ─────────────── */
   .addr-wrap { position: relative; width: 100%; }
   .addr-dropdown { position: absolute; top: calc(100% + 5px); left: 0; right: 0; z-index: 400; background: #1a2030; border: 1px solid rgba(255,255,255,0.13); border-radius: 6px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.7); }
   .addr-item { padding: 10px 13px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: flex-start; gap: 9px; transition: background 0.1s; }
@@ -155,79 +124,110 @@
   .addr-spinner   { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 13px; color: rgba(0,191,255,0.5); }
   .addr-confirmed { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 13px; color: #A8FF78; }
 
-  /* === BOTTOM NAVIGATION === */
+  /* ── BOTTOM NAV ───────────────────────── */
   .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; background: rgba(13,18,28,0.97); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1px solid rgba(255,255,255,0.09); display: flex; justify-content: center; padding-bottom: env(safe-area-inset-bottom, 0px); }
   .bottom-nav-inner { display: flex; width: 100%; max-width: 960px; }
-  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 0 9px; font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.32); cursor: pointer; border: none; background: none; transition: color 0.15s; position: relative; }
+  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 0 9px; font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.32); cursor: pointer; border: none; background: none; transition: color 0.15s; }
   .nav-item i { font-size: 22px; line-height: 1; }
   .nav-item.active { color: #00BFFF; }
-  .nav-badge { position: absolute; top: 8px; right: calc(50% - 18px); background: #FFD700; color: #0a0e14; border-radius: 10px; font-size: 8px; font-weight: 800; padding: 1px 5px; min-width: 15px; text-align: center; letter-spacing: 0; }
 
-  /* === PARTY TAB === */
-  .party-root { min-height: calc(100vh - 64px); }
-  .party-hero { padding: 32px 28px 24px; background: linear-gradient(160deg, #0f1c2e 0%, #0a0e14 100%); border-bottom: 1px solid rgba(255,255,255,0.07); }
-  .party-hero-eyebrow { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #A8FF78; margin-bottom: 8px; }
-  .party-hero-title { font-family: 'Barlow Condensed', sans-serif; font-size: 42px; font-weight: 800; text-transform: uppercase; color: #fff; line-height: 1; }
-  .party-hero-sub { font-size: 13px; color: rgba(255,255,255,0.38); margin-top: 7px; }
+  /* ── ONBOARDING ───────────────────────── */
+  .onboard-root { min-height: 100vh; display: flex; flex-direction: column; }
+  .onboard-hero { position: relative; height: 240px; overflow: hidden; flex-shrink: 0; }
+  .onboard-hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.35) saturate(1.2); }
+  .onboard-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, #0a0e14 0%, transparent 60%); }
+  .onboard-hero-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 0 28px 28px; }
+  .onboard-eyebrow { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #00BFFF; margin-bottom: 6px; }
+  .onboard-title { font-family: 'Barlow Condensed', sans-serif; font-size: 44px; font-weight: 800; text-transform: uppercase; color: #fff; line-height: 1; }
+  .onboard-body { flex: 1; padding: 28px 28px 20px; display: flex; flex-direction: column; }
+  .onboard-step-label { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-bottom: 6px; }
+  .onboard-step-title { font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 800; text-transform: uppercase; color: #fff; margin-bottom: 6px; }
+  .onboard-step-sub { font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 24px; line-height: 1.6; }
+  .onboard-fields { display: flex; flex-direction: column; gap: 12px; flex: 1; }
+  .onboard-actions { display: flex; gap: 10px; margin-top: 28px; padding-bottom: env(safe-area-inset-bottom, 16px); }
+  .onboard-btn-primary { flex: 1; background: #00BFFF; border: none; border-radius: 8px; color: #0a0e14; font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 14px 20px; cursor: pointer; transition: background 0.18s; display: flex; align-items: center; justify-content: center; gap: 7px; }
+  .onboard-btn-primary:hover:not(:disabled) { background: #33CCFF; }
+  .onboard-btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+  .onboard-btn-skip { background: none; border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: rgba(255,255,255,0.4); font-family: 'Barlow', sans-serif; font-size: 13px; padding: 14px 18px; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .onboard-btn-skip:hover { border-color: rgba(255,255,255,0.25); color: rgba(255,255,255,0.6); }
+  .step-dots { display: flex; gap: 7px; margin-bottom: 20px; }
+  .step-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.15); transition: background 0.2s; }
+  .step-dot.active { background: #00BFFF; }
+  .step-dot.done { background: rgba(0,191,255,0.4); }
+  .phone-hint { font-size: 11px; color: rgba(255,255,255,0.28); margin-top: 5px; }
+  .section-prefs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .pref-toggle { display: flex; align-items: center; gap: 9px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09); border-radius: 6px; padding: 10px 12px; cursor: pointer; transition: all 0.15s; }
+  .pref-toggle.on { background: rgba(0,191,255,0.1); border-color: rgba(0,191,255,0.3); }
+  .pref-check { width: 18px; height: 18px; border-radius: 4px; border: 1.5px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; font-size: 10px; font-weight: 700; }
+  .pref-toggle.on .pref-check { background: #00BFFF; border-color: #00BFFF; color: #0a0e14; }
+  .pref-label { font-size: 12px; color: rgba(255,255,255,0.6); font-weight: 500; line-height: 1.3; }
+  .pref-toggle.on .pref-label { color: #e8edf2; }
+  .crew-options { display: flex; flex-direction: column; gap: 8px; }
+  .crew-option-btn { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 14px 16px; cursor: pointer; text-align: left; transition: all 0.15s; }
+  .crew-option-btn:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.2); }
+  .crew-option-btn.selected { background: rgba(0,191,255,0.1); border-color: rgba(0,191,255,0.35); }
+  .crew-option-title { font-size: 14px; font-weight: 600; color: #e8edf2; margin-bottom: 3px; }
+  .crew-option-sub { font-size: 12px; color: rgba(255,255,255,0.38); }
+  .crew-code-input { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; text-align: center; }
 
-  .party-create { padding: 22px 28px; display: flex; flex-direction: column; gap: 10px; }
-  .party-section-title { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 2px; }
-  .party-row { display: flex; gap: 10px; }
-  .create-btn { background: #A8FF78; border: none; border-radius: 6px; color: #0a1a06; font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 13px 24px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.18s; margin-top: 4px; }
-  .create-btn:hover { background: #c4ffaa; }
-  .create-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-  .create-hint { text-align: center; padding: 10px 0 4px; font-size: 12px; color: rgba(255,255,255,0.2); }
+  /* ── CREW TAB ─────────────────────────── */
+  .crew-root { padding: 0; }
+  .crew-page-header { padding: 24px 28px 18px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .crew-page-eyebrow { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 5px; }
+  .crew-page-title { font-family: 'Barlow Condensed', sans-serif; font-size: 32px; font-weight: 800; text-transform: uppercase; color: #fff; }
+  .crew-section { padding: 18px 28px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .crew-section-label { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 12px; }
+  .crew-member-list { display: flex; flex-direction: column; gap: 2px; }
+  .crew-member-row { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: #111620; border-radius: 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .crew-member-row:first-child { border-radius: 8px 8px 0 0; }
+  .crew-member-row:last-child  { border-radius: 0 0 8px 8px; border-bottom: none; }
+  .crew-member-emoji { font-size: 20px; width: 28px; text-align: center; flex-shrink: 0; }
+  .crew-member-info { flex: 1; min-width: 0; }
+  .crew-member-name { font-size: 13px; font-weight: 500; color: #e8edf2; display: flex; align-items: center; gap: 6px; }
+  .crew-member-activity { font-size: 11px; color: rgba(255,255,255,0.38); margin-top: 1px; }
+  .crew-member-time { font-size: 10px; color: rgba(255,255,255,0.2); flex-shrink: 0; }
+  .you-badge { font-size: 9px; color: #00BFFF; background: rgba(0,191,255,0.12); border-radius: 3px; padding: 1px 5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+  .pending-dot { color: rgba(255,255,255,0.2); font-style: italic; }
+  .activity-skiing { color: #00BFFF; }
+  .activity-lake   { color: #38BDF8; }
+  .activity-golf   { color: #A8FF78; }
+  .activity-home   { color: #94A3B8; }
 
-  /* Party card */
-  .party-card { background: #111620; border-radius: 10px; margin: 18px 20px; border: 1px solid rgba(255,255,255,0.08); overflow: hidden; }
-  .party-card-header { padding: 16px 18px 14px; border-bottom: 1px solid rgba(255,255,255,0.06); }
-  .party-card-name { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 800; text-transform: uppercase; color: #fff; }
-  .party-card-meta { font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 3px; display: flex; align-items: center; gap: 8px; }
-  .party-full-banner { background: rgba(255,215,0,0.1); border-bottom: 1px solid rgba(255,215,0,0.2); padding: 10px 18px; display: flex; align-items: center; gap: 9px; font-size: 13px; color: #FFD700; font-weight: 500; }
+  /* Check-in button */
+  .checkin-btn { width: 100%; background: rgba(168,255,120,0.1); border: 1px solid rgba(168,255,120,0.28); border-radius: 8px; padding: 14px 20px; display: flex; align-items: center; justify-content: center; gap: 9px; font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #A8FF78; cursor: pointer; transition: all 0.18s; }
+  .checkin-btn:hover:not(:disabled) { background: rgba(168,255,120,0.18); }
+  .checkin-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+  .invite-row { display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: #111620; border-radius: 8px; border: 1px solid rgba(255,255,255,0.07); }
+  .invite-code { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 800; letter-spacing: 0.22em; color: #fff; flex: 1; }
+  .copy-btn { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 5px; padding: 6px 12px; font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.6); cursor: pointer; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.07em; text-transform: uppercase; white-space: nowrap; transition: all 0.15s; }
+  .copy-btn:hover { background: rgba(255,255,255,0.12); color: #e8edf2; }
+  .crew-empty-state { padding: 48px 28px; text-align: center; }
+  .crew-empty-icon { font-size: 48px; display: block; margin-bottom: 14px; }
+  .crew-empty-title { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
+  .crew-empty-sub { font-size: 13px; color: rgba(255,255,255,0.28); line-height: 1.7; margin-bottom: 20px; }
+  .crew-setup-btn { display: inline-flex; align-items: center; gap: 7px; background: rgba(0,191,255,0.12); border: 1px solid rgba(0,191,255,0.3); border-radius: 6px; padding: 11px 20px; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: #00BFFF; cursor: pointer; transition: all 0.15s; }
+  .crew-setup-btn:hover { background: rgba(0,191,255,0.2); }
+  .sent-note { font-size: 11px; color: rgba(255,255,255,0.2); margin-top: 8px; text-align: center; }
+  .date-strip { display: flex; align-items: center; gap: 10px; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 10px; }
+  .date-strip-line { flex: 1; height: 1px; background: rgba(255,255,255,0.07); }
 
-  /* Member list */
-  .member-list { padding: 4px 0; }
-  .member-row { display: flex; align-items: center; gap: 10px; padding: 10px 18px; border-bottom: 1px solid rgba(255,255,255,0.04); }
-  .member-row:last-child { border-bottom: none; }
-  .member-emoji { font-size: 20px; width: 28px; text-align: center; flex-shrink: 0; }
-  .member-info { flex: 1; min-width: 0; }
-  .member-name-row { font-size: 13px; color: #e8edf2; font-weight: 500; display: flex; align-items: center; gap: 6px; }
-  .member-you { font-size: 9px; color: #00BFFF; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; background: rgba(0,191,255,0.12); border-radius: 3px; padding: 1px 5px; }
-  .member-status-text { font-size: 11px; color: rgba(255,255,255,0.38); margin-top: 2px; }
-  .member-time { font-size: 10px; color: rgba(255,255,255,0.2); flex-shrink: 0; }
-  .member-empty { padding: 20px 18px; font-size: 13px; color: rgba(255,255,255,0.25); text-align: center; font-style: italic; }
+  /* ── PROFILE TAB ──────────────────────── */
+  .profile-root { padding: 0; }
+  .profile-header { padding: 24px 28px 20px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .profile-greeting { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 5px; }
+  .profile-name { font-family: 'Barlow Condensed', sans-serif; font-size: 34px; font-weight: 800; text-transform: uppercase; color: #fff; }
+  .profile-section { padding: 20px 28px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .profile-section-label { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 14px; }
+  .profile-fields { display: flex; flex-direction: column; gap: 10px; }
+  .save-indicator { font-size: 11px; color: #A8FF78; display: flex; align-items: center; gap: 5px; }
+  .danger-btn { background: none; border: 1px solid rgba(255,80,80,0.25); border-radius: 6px; color: rgba(255,100,100,0.6); font-size: 13px; padding: 10px 16px; cursor: pointer; width: 100%; text-align: center; font-family: 'Barlow', sans-serif; transition: all 0.15s; }
+  .danger-btn:hover { background: rgba(255,80,80,0.08); border-color: rgba(255,80,80,0.4); color: rgba(255,130,130,0.8); }
 
-  /* Join input */
-  .join-section { padding: 12px 18px 14px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; gap: 8px; align-items: flex-end; }
-  .join-section .field-group { flex: 1; }
-
-  /* Your status */
-  .your-status-section { padding: 14px 18px 16px; border-top: 1px solid rgba(255,255,255,0.06); }
-  .your-status-label { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 10px; }
-  .status-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-  @media (max-width: 360px) { .status-grid { grid-template-columns: repeat(3, 1fr); } }
-  .status-btn { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px 4px 9px; display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; transition: all 0.15s; }
-  .status-btn:hover { background: rgba(0,191,255,0.1); border-color: rgba(0,191,255,0.28); }
-  .status-btn.selected { background: rgba(0,191,255,0.14); border-color: rgba(0,191,255,0.45); }
-  .status-btn.selected-full { background: rgba(255,215,0,0.12); border-color: rgba(255,215,0,0.4); }
-  .status-emoji { font-size: 22px; line-height: 1; }
-  .status-label { font-size: 9px; color: rgba(255,255,255,0.45); text-align: center; line-height: 1.3; }
-  .status-btn.selected .status-label { color: #00BFFF; }
-  .status-btn.selected-full .status-label { color: #FFD700; }
-
-  /* Share / actions */
-  .party-actions { padding: 12px 18px 14px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; gap: 8px; }
-  .share-btn { display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(168,255,120,0.1); border: 1px solid rgba(168,255,120,0.28); border-radius: 6px; padding: 13px 20px; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #A8FF78; cursor: pointer; transition: all 0.15s; }
-  .share-btn:hover { background: rgba(168,255,120,0.18); }
-  .share-btn.copied { color: #FFD700; border-color: rgba(255,215,0,0.3); background: rgba(255,215,0,0.08); }
-  .leave-btn { font-size: 12px; color: rgba(255,255,255,0.22); background: none; border: none; cursor: pointer; text-align: center; padding: 4px; transition: color 0.15s; }
-  .leave-btn:hover { color: rgba(255,80,80,0.5); }
-
-  /* Toast */
+  /* ── TOAST ────────────────────────────── */
   .toast { position: fixed; bottom: calc(74px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); background: #1c2638; border: 1px solid rgba(0,191,255,0.28); border-radius: 8px; padding: 10px 18px; font-size: 13px; color: #e8edf2; display: flex; align-items: center; gap: 8px; z-index: 2000; animation: toast-in 0.3s ease; white-space: nowrap; pointer-events: none; box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
   @keyframes toast-in { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
 
-  /* Animations */
+  /* ── UTILS ────────────────────────────── */
   @keyframes spin-anim { to { transform: rotate(360deg); } }
   .spin { animation: spin-anim 0.8s linear infinite; display: inline-block; }
   @keyframes fade-up { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
@@ -239,9 +239,7 @@
 
 <script>
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => {});
-  });
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
 }
 </script>
 
@@ -252,44 +250,46 @@ if ('serviceWorker' in navigator) {
 <script type="text/babel">
 const { useState, useMemo, useEffect, useRef, useCallback } = React;
 
-/* ═══════════════════════════ RESORT DATA ═══════════════════════════ */
+/* ════════════════════════════════════════════════════════
+   CONSTANTS
+════════════════════════════════════════════════════════ */
 const IKON_RESORTS = [
-  { name: "Palisades Tahoe",    state: "CA", region: "West",    url: "https://www.palisadestahoe.com/mountain-report",                         avalanche: "Sierra",         elevation: 8600,  highways: ["I-80","SR-89"],      opensnow: "palisadestahoe",   parking: "palisades", unofficialAlpine: true,  img: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1200&q=80" },
-  { name: "Alpine Meadows",     state: "CA", region: "West",    url: "https://www.palisadestahoe.com/mountain-report",                         avalanche: "Sierra",         elevation: 7000,  highways: ["SR-89"],             opensnow: "palisadestahoe",   parking: "alpine",    unofficialAlpine: true,  img: "https://images.unsplash.com/photo-1548777123-e216912df7d8?w=1200&q=80" },
-  { name: "Mammoth Mountain",   state: "CA", region: "West",    url: "https://www.mammothmountain.com/on-the-mountain/mountain-report",        avalanche: "Eastern Sierra", elevation: 11053, highways: ["US-395","SR-203"],    opensnow: "mammothmountain",  parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1200&q=80" },
-  { name: "June Mountain",      state: "CA", region: "West",    url: "https://www.junemountain.com/mountain-report",                           avalanche: "Eastern Sierra", elevation: 10135, highways: ["US-395"],             opensnow: "junemountain",     parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1605540436563-5bca919ae766?w=1200&q=80" },
-  { name: "Big Bear Mountain",  state: "CA", region: "West",    url: "https://www.bigbearmountainresort.com/mountain-conditions",              avalanche: "N/A",            elevation: 8805,  highways: ["SR-18","SR-38"],      opensnow: "bigbear",          parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=1200&q=80" },
-  { name: "Sierra-at-Tahoe",   state: "CA", region: "West",    url: "https://www.sierraattahoe.com/mountain-report",                          avalanche: "Sierra",         elevation: 8852,  highways: ["US-50"],             opensnow: "sierraattahoe",    parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1200&q=80" },
-  { name: "Aspen Snowmass",    state: "CO", region: "Rockies", url: "https://www.aspensnowmass.com/while-you-are-here/mountain-conditions",    avalanche: "CAIC",           elevation: 11835, highways: ["CO-82"],             opensnow: "snowmass",         parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=1200&q=80" },
-  { name: "Steamboat",         state: "CO", region: "Rockies", url: "https://www.steamboat.com/the-mountain/mountain-report",                 avalanche: "CAIC",           elevation: 10568, highways: ["US-40"],             opensnow: "steamboat",        parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1605540436563-5bca919ae766?w=1200&q=80" },
-  { name: "Winter Park",       state: "CO", region: "Rockies", url: "https://www.winterparkresort.com/the-mountain/mountain-report",          avalanche: "CAIC",           elevation: 12060, highways: ["US-40"],             opensnow: "winterpark",       parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=1200&q=80" },
-  { name: "Copper Mountain",   state: "CO", region: "Rockies", url: "https://www.coppercolorado.com/the-mountain/mountain-report",            avalanche: "CAIC",           elevation: 12313, highways: ["I-70"],              opensnow: "coppermountain",   parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1548777123-e216912df7d8?w=1200&q=80" },
-  { name: "Arapahoe Basin",    state: "CO", region: "Rockies", url: "https://www.arapahoebasin.com/conditions/",                              avalanche: "CAIC",           elevation: 13050, highways: ["US-6"],              opensnow: "arapahoebasin",    parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1200&q=80" },
-  { name: "Jackson Hole",      state: "WY", region: "Rockies", url: "https://www.jacksonhole.com/mountain-report.html",                       avalanche: "Bridger-Teton",  elevation: 10450, highways: ["WY-22","WY-390"],    opensnow: "jacksonhole",      parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=1200&q=80" },
-  { name: "Big Sky Resort",    state: "MT", region: "Rockies", url: "https://www.bigskyresort.com/the-mountain/mountain-conditions",          avalanche: "Gallatin NF",    elevation: 11166, highways: ["US-191"],            opensnow: "bigsky",           parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1200&q=80" },
-  { name: "Taos Ski Valley",   state: "NM", region: "Rockies", url: "https://www.skitaos.com/the-mountain/mountain-report",                   avalanche: "NWAC",           elevation: 11819, highways: ["NM-150"],            opensnow: "taos",             parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1605540436563-5bca919ae766?w=1200&q=80" },
-  { name: "Deer Valley Resort",state: "UT", region: "Rockies", url: "https://www.deervalley.com/plan-your-trip/weather-and-conditions",       avalanche: "UAC",            elevation: 9570,  highways: ["US-40","SR-224"],    opensnow: "deervalley",       parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=1200&q=80" },
-  { name: "Solitude Mountain", state: "UT", region: "Rockies", url: "https://www.solitudemountain.com/mountain/conditions",                   avalanche: "UAC",            elevation: 10035, highways: ["UT-190"],            opensnow: "solitude",         parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1548777123-e216912df7d8?w=1200&q=80" },
-  { name: "Crystal Mountain",  state: "WA", region: "West",    url: "https://www.crystalmountainresort.com/mountain/snow-report",             avalanche: "NWAC",           elevation: 7012,  highways: ["WA-410"],            opensnow: "crystalmountain",  parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1200&q=80" },
-  { name: "Mt. Bachelor",      state: "OR", region: "West",    url: "https://www.mtbachelor.com/mountain-report",                             avalanche: "CSAW",           elevation: 9065,  highways: ["US-97","OR-372"],    opensnow: "mtbachelor",       parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=1200&q=80" },
-  { name: "Sun Valley",        state: "ID", region: "West",    url: "https://www.sunvalley.com/mountain-report",                              avalanche: "Sawtooth",       elevation: 9150,  highways: ["US-75"],             opensnow: "sunvalley",        parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1605540436563-5bca919ae766?w=1200&q=80" },
-  { name: "Killington",        state: "VT", region: "East",    url: "https://www.killington.com/the-mountain/snow-report",                    avalanche: "N/A",            elevation: 4241,  highways: ["US-4"],              opensnow: "killington",       parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=1200&q=80" },
-  { name: "Sugarbush Resort",  state: "VT", region: "East",    url: "https://www.sugarbush.com/the-mountain/snow-and-weather",                avalanche: "N/A",            elevation: 4083,  highways: ["VT-17"],             opensnow: "sugarbush",        parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1548777123-e216912df7d8?w=1200&q=80" },
-  { name: "Revelstoke Mountain",state:"BC", region: "Canada",  url: "https://www.revelstokemountainresort.com/mountain/conditions",           avalanche: "Avalanche Canada",elevation:7657,  highways: ["BC-1"],              opensnow: "revelstoke",       parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=1200&q=80" },
-  { name: "Niseko United",     state: "Japan", region: "International", url: "https://www.niseko.ne.jp/en/snow/",                             avalanche: "N/A",            elevation: 4882,  highways: ["HK-66"],             opensnow: "niseko",           parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1605540436563-5bca919ae766?w=1200&q=80" },
+  { name: "Palisades Tahoe",    state: "CA", region: "West",    url: "https://www.palisadestahoe.com/mountain-report",                         avalanche: "Sierra",          elevation: 8600,  highways: ["I-80","SR-89"],   opensnow: "palisadestahoe",  parking: "palisades", unofficialAlpine: true,  img: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1200&q=80" },
+  { name: "Alpine Meadows",     state: "CA", region: "West",    url: "https://www.palisadestahoe.com/mountain-report",                         avalanche: "Sierra",          elevation: 7000,  highways: ["SR-89"],          opensnow: "palisadestahoe",  parking: "alpine",    unofficialAlpine: true,  img: "https://images.unsplash.com/photo-1548777123-e216912df7d8?w=1200&q=80" },
+  { name: "Mammoth Mountain",   state: "CA", region: "West",    url: "https://www.mammothmountain.com/on-the-mountain/mountain-report",        avalanche: "Eastern Sierra",  elevation: 11053, highways: ["US-395","SR-203"],opensnow: "mammothmountain", parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1200&q=80" },
+  { name: "June Mountain",      state: "CA", region: "West",    url: "https://www.junemountain.com/mountain-report",                           avalanche: "Eastern Sierra",  elevation: 10135, highways: ["US-395"],         opensnow: "junemountain",    parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1605540436563-5bca919ae766?w=1200&q=80" },
+  { name: "Big Bear Mountain",  state: "CA", region: "West",    url: "https://www.bigbearmountainresort.com/mountain-conditions",              avalanche: "N/A",             elevation: 8805,  highways: ["SR-18","SR-38"],  opensnow: "bigbear",         parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=1200&q=80" },
+  { name: "Sierra-at-Tahoe",   state: "CA", region: "West",    url: "https://www.sierraattahoe.com/mountain-report",                          avalanche: "Sierra",          elevation: 8852,  highways: ["US-50"],          opensnow: "sierraattahoe",   parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1200&q=80" },
+  { name: "Aspen Snowmass",    state: "CO", region: "Rockies", url: "https://www.aspensnowmass.com/while-you-are-here/mountain-conditions",    avalanche: "CAIC",            elevation: 11835, highways: ["CO-82"],          opensnow: "snowmass",        parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=1200&q=80" },
+  { name: "Steamboat",         state: "CO", region: "Rockies", url: "https://www.steamboat.com/the-mountain/mountain-report",                 avalanche: "CAIC",            elevation: 10568, highways: ["US-40"],          opensnow: "steamboat",       parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1605540436563-5bca919ae766?w=1200&q=80" },
+  { name: "Winter Park",       state: "CO", region: "Rockies", url: "https://www.winterparkresort.com/the-mountain/mountain-report",          avalanche: "CAIC",            elevation: 12060, highways: ["US-40"],          opensnow: "winterpark",      parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=1200&q=80" },
+  { name: "Copper Mountain",   state: "CO", region: "Rockies", url: "https://www.coppercolorado.com/the-mountain/mountain-report",            avalanche: "CAIC",            elevation: 12313, highways: ["I-70"],           opensnow: "coppermountain",  parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1548777123-e216912df7d8?w=1200&q=80" },
+  { name: "Arapahoe Basin",    state: "CO", region: "Rockies", url: "https://www.arapahoebasin.com/conditions/",                              avalanche: "CAIC",            elevation: 13050, highways: ["US-6"],           opensnow: "arapahoebasin",   parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1200&q=80" },
+  { name: "Jackson Hole",      state: "WY", region: "Rockies", url: "https://www.jacksonhole.com/mountain-report.html",                       avalanche: "Bridger-Teton",   elevation: 10450, highways: ["WY-22","WY-390"],opensnow: "jacksonhole",     parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=1200&q=80" },
+  { name: "Big Sky Resort",    state: "MT", region: "Rockies", url: "https://www.bigskyresort.com/the-mountain/mountain-conditions",          avalanche: "Gallatin NF",     elevation: 11166, highways: ["US-191"],         opensnow: "bigsky",          parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1200&q=80" },
+  { name: "Taos Ski Valley",   state: "NM", region: "Rockies", url: "https://www.skitaos.com/the-mountain/mountain-report",                   avalanche: "NWAC",            elevation: 11819, highways: ["NM-150"],         opensnow: "taos",            parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1605540436563-5bca919ae766?w=1200&q=80" },
+  { name: "Deer Valley Resort",state: "UT", region: "Rockies", url: "https://www.deervalley.com/plan-your-trip/weather-and-conditions",       avalanche: "UAC",             elevation: 9570,  highways: ["US-40","SR-224"],opensnow: "deervalley",      parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=1200&q=80" },
+  { name: "Solitude Mountain", state: "UT", region: "Rockies", url: "https://www.solitudemountain.com/mountain/conditions",                   avalanche: "UAC",             elevation: 10035, highways: ["UT-190"],         opensnow: "solitude",        parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1548777123-e216912df7d8?w=1200&q=80" },
+  { name: "Crystal Mountain",  state: "WA", region: "West",    url: "https://www.crystalmountainresort.com/mountain/snow-report",             avalanche: "NWAC",            elevation: 7012,  highways: ["WA-410"],         opensnow: "crystalmountain", parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1200&q=80" },
+  { name: "Mt. Bachelor",      state: "OR", region: "West",    url: "https://www.mtbachelor.com/mountain-report",                             avalanche: "CSAW",            elevation: 9065,  highways: ["US-97","OR-372"], opensnow: "mtbachelor",      parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=1200&q=80" },
+  { name: "Sun Valley",        state: "ID", region: "West",    url: "https://www.sunvalley.com/mountain-report",                              avalanche: "Sawtooth",        elevation: 9150,  highways: ["US-75"],          opensnow: "sunvalley",       parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1605540436563-5bca919ae766?w=1200&q=80" },
+  { name: "Killington",        state: "VT", region: "East",    url: "https://www.killington.com/the-mountain/snow-report",                    avalanche: "N/A",             elevation: 4241,  highways: ["US-4"],           opensnow: "killington",      parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=1200&q=80" },
+  { name: "Sugarbush Resort",  state: "VT", region: "East",    url: "https://www.sugarbush.com/the-mountain/snow-and-weather",                avalanche: "N/A",             elevation: 4083,  highways: ["VT-17"],          opensnow: "sugarbush",       parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1548777123-e216912df7d8?w=1200&q=80" },
+  { name: "Revelstoke Mountain",state:"BC", region: "Canada",  url: "https://www.revelstokemountainresort.com/mountain/conditions",           avalanche: "Avalanche Canada",elevation: 7657,  highways: ["BC-1"],           opensnow: "revelstoke",      parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=1200&q=80" },
+  { name: "Niseko United",     state: "Japan", region: "International", url: "https://www.niseko.ne.jp/en/snow/",                             avalanche: "N/A",             elevation: 4882,  highways: ["HK-66"],          opensnow: "niseko",          parking: null,        unofficialAlpine: false, img: "https://images.unsplash.com/photo-1605540436563-5bca919ae766?w=1200&q=80" },
 ];
 
-const SECTIONS = ["field","road","parking","lifts","trails","avalanche","weather","summary"];
+const ALL_SECTIONS = ["field","road","parking","lifts","trails","avalanche","weather","summary"];
 
 const SECTION_META = {
-  field:     { icon: "ti-message-2",      label: "Field report",           accent: "#00BFFF" },
-  road:      { icon: "ti-road",           label: "Road & traffic",         accent: "#FF6B35" },
-  parking:   { icon: "ti-parking",        label: "Parking & Mountaineer",  accent: "#00BFFF" },
-  lifts:     { icon: "ti-armchair",       label: "Lifts open",             accent: "#7DF9FF" },
-  trails:    { icon: "ti-mountain",       label: "Trail report",           accent: "#A8FF78" },
-  avalanche: { icon: "ti-alert-triangle", label: "Avalanche forecast",     accent: "#FF6B35" },
-  weather:   { icon: "ti-cloud-snow",     label: "Weather & gear",         accent: "#C4B5FD" },
-  summary:   { icon: "ti-checklist",      label: "Game plan",              accent: "#FFD700" },
+  field:     { icon: "ti-message-2",      label: "Field report",          accent: "#00BFFF" },
+  road:      { icon: "ti-road",           label: "Road & traffic",        accent: "#FF6B35" },
+  parking:   { icon: "ti-parking",        label: "Parking",               accent: "#00BFFF" },
+  lifts:     { icon: "ti-armchair",       label: "Lifts open",            accent: "#7DF9FF" },
+  trails:    { icon: "ti-mountain",       label: "Trail report",          accent: "#A8FF78" },
+  avalanche: { icon: "ti-alert-triangle", label: "Avalanche forecast",    accent: "#FF6B35" },
+  weather:   { icon: "ti-cloud-snow",     label: "Weather & gear",        accent: "#C4B5FD" },
+  summary:   { icon: "ti-checklist",      label: "Game plan",             accent: "#FFD700" },
 };
 
 const SECTION_MARKERS = {
@@ -303,47 +303,37 @@ const SECTION_MARKERS = {
   summary:   ["GAME PLAN:","SUMMARY:","BOTTOM LINE:"],
 };
 
-/* ═══════════════════════════ PARTY STATUSES ═══════════════════════════ */
-const STATUSES = [
-  { code: 'driving', emoji: '🚗', label: 'Heading up' },
-  { code: 'base',    emoji: '🏔️', label: 'At mountain' },
-  { code: 'skiing',  emoji: '🎿', label: 'On slopes' },
-  { code: 'lunch',   emoji: '🍔', label: 'Lunch break' },
-  { code: 'full',    emoji: '🎉', label: 'Party full!' },
-  { code: 'apres',   emoji: '🍺', label: 'Après ski' },
-  { code: 'done',    emoji: '✅', label: 'Done today' },
-];
-
-/* ═══════════════════════════ HIGHWAY DOT LINKS ═══════════════════════════ */
-const HIGHWAY_DOT = {
-  'I-80':   { name: 'Caltrans',  url: 'https://quickmap.dot.ca.gov/' },
-  'SR-89':  { name: 'Caltrans',  url: 'https://quickmap.dot.ca.gov/' },
-  'US-50':  { name: 'Caltrans',  url: 'https://quickmap.dot.ca.gov/' },
-  'US-395': { name: 'Caltrans',  url: 'https://quickmap.dot.ca.gov/' },
-  'SR-203': { name: 'Caltrans',  url: 'https://quickmap.dot.ca.gov/' },
-  'SR-18':  { name: 'Caltrans',  url: 'https://quickmap.dot.ca.gov/' },
-  'SR-38':  { name: 'Caltrans',  url: 'https://quickmap.dot.ca.gov/' },
-  'I-70':   { name: 'CDOT',      url: 'https://www.cotrip.org/home.htm' },
-  'US-40':  { name: 'CDOT',      url: 'https://www.cotrip.org/home.htm' },
-  'CO-82':  { name: 'CDOT',      url: 'https://www.cotrip.org/home.htm' },
-  'US-6':   { name: 'CDOT',      url: 'https://www.cotrip.org/home.htm' },
-  'WY-22':  { name: 'WyDOT',     url: 'https://www.wyoroad.info/' },
-  'WY-390': { name: 'WyDOT',     url: 'https://www.wyoroad.info/' },
-  'US-191': { name: 'WyDOT',     url: 'https://www.wyoroad.info/' },
-  'NM-150': { name: 'NMDOT',     url: 'https://nmroads.com/' },
-  'SR-224': { name: 'UDOT',      url: 'https://udottraffic.utah.gov/' },
-  'UT-190': { name: 'UDOT',      url: 'https://udottraffic.utah.gov/' },
-  'WA-410': { name: 'WSDOT',     url: 'https://www.wsdot.wa.gov/Traffic/' },
-  'OR-372': { name: 'TripCheck', url: 'https://tripcheck.com/' },
-  'US-97':  { name: 'TripCheck', url: 'https://tripcheck.com/' },
-  'US-75':  { name: '511 Idaho', url: 'https://511.idaho.gov/' },
-  'US-4':   { name: '511 VT',    url: 'https://511vt.org/' },
-  'VT-17':  { name: '511 VT',    url: 'https://511vt.org/' },
-  'BC-1':   { name: 'DriveBC',   url: 'https://www.drivebc.ca/' },
-  'HK-66':  { name: 'Maps',      url: 'https://maps.google.com/' },
+const SECTION_LABELS = {
+  field: "Field report", road: "Road & traffic", parking: "Parking",
+  lifts: "Lifts open", trails: "Trail report", avalanche: "Avalanche",
+  weather: "Weather & gear", summary: "Game plan",
 };
 
-/* ═══════════════════════════ HELPERS ═══════════════════════════ */
+const ACTIVITIES = {
+  skiing: { emoji: '⛷️', label: 'Skiing',    color: 'activity-skiing' },
+  lake:   { emoji: '⛵', label: 'Lake/boat', color: 'activity-lake'   },
+  golf:   { emoji: '⛳', label: 'Golf',      color: 'activity-golf'   },
+  home:   { emoji: '🏡', label: 'Home day',  color: 'activity-home'   },
+};
+
+const HIGHWAY_DOT = {
+  'I-80': { name:'Caltrans', url:'https://quickmap.dot.ca.gov/' }, 'SR-89': { name:'Caltrans', url:'https://quickmap.dot.ca.gov/' },
+  'US-50': { name:'Caltrans', url:'https://quickmap.dot.ca.gov/' }, 'US-395': { name:'Caltrans', url:'https://quickmap.dot.ca.gov/' },
+  'SR-203': { name:'Caltrans', url:'https://quickmap.dot.ca.gov/' }, 'SR-18': { name:'Caltrans', url:'https://quickmap.dot.ca.gov/' },
+  'SR-38': { name:'Caltrans', url:'https://quickmap.dot.ca.gov/' }, 'I-70': { name:'CDOT', url:'https://www.cotrip.org/home.htm' },
+  'US-40': { name:'CDOT', url:'https://www.cotrip.org/home.htm' }, 'CO-82': { name:'CDOT', url:'https://www.cotrip.org/home.htm' },
+  'US-6': { name:'CDOT', url:'https://www.cotrip.org/home.htm' }, 'WY-22': { name:'WyDOT', url:'https://www.wyoroad.info/' },
+  'WY-390': { name:'WyDOT', url:'https://www.wyoroad.info/' }, 'US-191': { name:'WyDOT', url:'https://www.wyoroad.info/' },
+  'NM-150': { name:'NMDOT', url:'https://nmroads.com/' }, 'SR-224': { name:'UDOT', url:'https://udottraffic.utah.gov/' },
+  'UT-190': { name:'UDOT', url:'https://udottraffic.utah.gov/' }, 'WA-410': { name:'WSDOT', url:'https://www.wsdot.wa.gov/Traffic/' },
+  'OR-372': { name:'TripCheck', url:'https://tripcheck.com/' }, 'US-97': { name:'TripCheck', url:'https://tripcheck.com/' },
+  'US-75': { name:'511 Idaho', url:'https://511.idaho.gov/' }, 'US-4': { name:'511 VT', url:'https://511vt.org/' },
+  'VT-17': { name:'511 VT', url:'https://511vt.org/' }, 'BC-1': { name:'DriveBC', url:'https://www.drivebc.ca/' },
+};
+
+/* ════════════════════════════════════════════════════════
+   HELPERS
+════════════════════════════════════════════════════════ */
 function parseSection(text, key) {
   const keys = SECTION_MARKERS[key];
   const otherKeys = Object.entries(SECTION_MARKERS).filter(([k]) => k !== key).flatMap(([,v]) => v);
@@ -365,27 +355,11 @@ function parseSection(text, key) {
   return result.join("\n").trim();
 }
 
-function encodeParty(party) {
-  try { return btoa(encodeURIComponent(JSON.stringify(party))); }
-  catch { return null; }
+function loadProfile() {
+  try { return JSON.parse(localStorage.getItem('skiProfile') || 'null'); } catch { return null; }
 }
-
-function decodeParty(str) {
-  try { return JSON.parse(decodeURIComponent(atob(str))); }
-  catch { return null; }
-}
-
-function readPartyFromURL() {
-  const p = new URLSearchParams(window.location.search).get('party');
-  return p ? decodeParty(p) : null;
-}
-
-function writePartyToURL(party) {
-  const u = new URL(window.location.href);
-  if (party) u.searchParams.set('party', encodeParty(party));
-  else u.searchParams.delete('party');
-  window.history.replaceState({}, '', u.toString());
-  return u.toString();
+function saveProfile(p) {
+  localStorage.setItem('skiProfile', JSON.stringify(p));
 }
 
 function formatTime(iso) {
@@ -393,7 +367,14 @@ function formatTime(iso) {
   return new Date(iso).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 }
 
-/* ═══════════════════════════ ADDRESS AUTOCOMPLETE ═══════════════════════════ */
+function tomorrowStr() {
+  const d = new Date(); d.setDate(d.getDate() + 1); return d.toISOString().slice(0, 10);
+}
+function todayStr() { return new Date().toISOString().slice(0, 10); }
+
+/* ════════════════════════════════════════════════════════
+   ADDRESS AUTOCOMPLETE
+════════════════════════════════════════════════════════ */
 function AddressAutocomplete({ value, onChange, placeholder }) {
   const [inputVal, setInputVal]       = useState(value || "");
   const [suggestions, setSuggestions] = useState([]);
@@ -407,50 +388,35 @@ function AddressAutocomplete({ value, onChange, placeholder }) {
   useEffect(() => { setInputVal(value || ""); }, [value]);
 
   function buildLabel(r) {
-    const a = r.address || {};
-    const parts = [];
-    const houseNum = a.house_number || "";
-    const road     = a.road || a.pedestrian || a.footway || a.path || "";
-    if (road) parts.push(houseNum ? `${houseNum} ${road}` : road);
-    const city = a.city || a.town || a.village || a.hamlet || a.suburb || a.neighbourhood || "";
-    if (city) parts.push(city);
-    const state = a.state || a.province || a.region || "";
-    const zip   = a.postcode || "";
-    if (state && zip) parts.push(`${state} ${zip}`);
-    else if (state)   parts.push(state);
-    const country = a.country_code ? a.country_code.toUpperCase() : "";
-    if (country && country !== "US") parts.push(a.country || country);
-    return parts.length > 0 ? parts.join(", ") : r.display_name;
+    const a = r.address || {}, p = [];
+    const hn = a.house_number || "", road = a.road || a.pedestrian || a.footway || "";
+    if (road) p.push(hn ? `${hn} ${road}` : road);
+    const city = a.city || a.town || a.village || a.hamlet || "";
+    if (city) p.push(city);
+    const state = a.state || a.province || "", zip = a.postcode || "";
+    if (state && zip) p.push(`${state} ${zip}`); else if (state) p.push(state);
+    const cc = a.country_code ? a.country_code.toUpperCase() : "";
+    if (cc && cc !== "US") p.push(a.country || cc);
+    return p.length > 0 ? p.join(", ") : r.display_name;
   }
-
   function buildMain(r) {
-    const a = r.address || {};
-    const houseNum = a.house_number || "";
-    const road     = a.road || a.pedestrian || a.footway || "";
-    if (road) return houseNum ? `${houseNum} ${road}` : road;
+    const a = r.address || {}, hn = a.house_number || "", road = a.road || a.pedestrian || a.footway || "";
+    if (road) return hn ? `${hn} ${road}` : road;
     return a.city || a.town || a.village || a.hamlet || r.display_name.split(",")[0];
   }
-
   function buildSub(r) {
-    const a = r.address || {};
-    const city    = a.city || a.town || a.village || a.hamlet || "";
-    const state   = a.state || a.province || "";
-    const zip     = a.postcode || "";
-    const country = a.country_code ? a.country_code.toUpperCase() : "";
-    const road = a.road || a.pedestrian || "";
-    const subParts = [];
-    if (road && city) subParts.push(city);
-    if (state)        subParts.push(zip ? `${state} ${zip}` : state);
-    if (country && country !== "US") subParts.push(a.country || country);
-    return subParts.join(", ");
+    const a = r.address || {}, city = a.city || a.town || a.village || "", state = a.state || "", zip = a.postcode || "";
+    const road = a.road || "", cc = a.country_code ? a.country_code.toUpperCase() : "";
+    const p = [];
+    if (road && city) p.push(city);
+    if (state) p.push(zip ? `${state} ${zip}` : state);
+    if (cc && cc !== "US") p.push(a.country || cc);
+    return p.join(", ");
   }
 
   function handleInput(e) {
     const v = e.target.value;
-    setInputVal(v);
-    setConfirmed(false);
-    setHighlighted(-1);
-    onChange(v);
+    setInputVal(v); setConfirmed(false); setHighlighted(-1); onChange(v);
     clearTimeout(debounceRef.current);
     if (v.trim().length < 3) { setSuggestions([]); setShowDrop(false); return; }
     debounceRef.current = setTimeout(async () => {
@@ -458,480 +424,849 @@ function AddressAutocomplete({ value, onChange, placeholder }) {
       abortRef.current = new AbortController();
       setLoading(true);
       try {
-        const looksLikeStreet = /^\d+\s+\w/.test(v.trim());
-        const url = looksLikeStreet
-          ? `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(v)}&format=json&addressdetails=1&limit=7`
-          : `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(v)}&format=json&addressdetails=1&limit=7&countrycodes=us,ca,jp,ch,au,nz,at,fr,de,gb,ar,cl`;
-        const res = await fetch(url, {
-          signal: abortRef.current.signal,
-          headers: { "Accept-Language": "en", "User-Agent": "SkiDayBriefingApp/1.0" }
-        });
+        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(v)}&format=json&addressdetails=1&limit=7&countrycodes=us,ca,jp`;
+        const res = await fetch(url, { signal: abortRef.current.signal, headers: { "Accept-Language": "en", "User-Agent": "SkiBriefApp/2.0" } });
         const data = await res.json();
-        const seen = new Set();
-        const mapped = [];
+        const seen = new Set(), mapped = [];
         for (const r of data) {
           const label = buildLabel(r);
           if (!seen.has(label)) { seen.add(label); mapped.push({ label, main: buildMain(r), sub: buildSub(r) }); }
         }
-        setSuggestions(mapped);
-        setShowDrop(true);
-      } catch (err) {
-        if (err.name !== "AbortError") setSuggestions([]);
-      } finally { setLoading(false); }
+        setSuggestions(mapped); setShowDrop(true);
+      } catch (err) { if (err.name !== "AbortError") setSuggestions([]); }
+      finally { setLoading(false); }
     }, 300);
   }
 
-  function pick(s) {
-    setInputVal(s.label);
-    setConfirmed(true);
-    setSuggestions([]);
-    setShowDrop(false);
-    onChange(s.label);
-  }
+  function pick(s) { setInputVal(s.label); setConfirmed(true); setSuggestions([]); setShowDrop(false); onChange(s.label); }
 
   function handleKeyDown(e) {
     if (!showDrop || !suggestions.length) return;
-    if (e.key === "ArrowDown") { e.preventDefault(); setHighlighted(h => Math.min(h + 1, suggestions.length - 1)); }
-    if (e.key === "ArrowUp")   { e.preventDefault(); setHighlighted(h => Math.max(h - 1, 0)); }
+    if (e.key === "ArrowDown") { e.preventDefault(); setHighlighted(h => Math.min(h+1, suggestions.length-1)); }
+    if (e.key === "ArrowUp")   { e.preventDefault(); setHighlighted(h => Math.max(h-1, 0)); }
     if (e.key === "Enter" && highlighted >= 0) { e.preventDefault(); pick(suggestions[highlighted]); }
     if (e.key === "Escape") { setShowDrop(false); setHighlighted(-1); }
   }
 
   return (
     <div className="addr-wrap">
-      <input
-        className="field-input" type="text" value={inputVal}
-        onChange={handleInput} onKeyDown={handleKeyDown}
+      <input className="field-input" type="text" value={inputVal} onChange={handleInput} onKeyDown={handleKeyDown}
         onFocus={() => suggestions.length > 0 && setShowDrop(true)}
         onBlur={() => setTimeout(() => setShowDrop(false), 180)}
-        placeholder={placeholder} autoComplete="off" style={{ paddingRight: 30 }}
-      />
+        placeholder={placeholder} autoComplete="off" style={{ paddingRight: 30 }} />
       {loading   && <i className="ti ti-loader-2 spin addr-spinner" />}
       {confirmed && !loading && <i className="ti ti-check addr-confirmed" />}
       {showDrop && suggestions.length > 0 && (
         <div className="addr-dropdown">
           {suggestions.map((s, i) => (
-            <div key={i} className={`addr-item${highlighted === i ? " highlighted" : ""}`}
+            <div key={i} className={`addr-item${highlighted===i?" highlighted":""}`}
               onMouseDown={() => pick(s)} onMouseEnter={() => setHighlighted(i)}>
               <i className="ti ti-map-pin addr-item-icon" />
-              <div>
-                <div className="addr-item-main">{s.main}</div>
-                {s.sub && <div className="addr-item-sub">{s.sub}</div>}
-              </div>
+              <div><div className="addr-item-main">{s.main}</div>{s.sub && <div className="addr-item-sub">{s.sub}</div>}</div>
             </div>
           ))}
-          <div style={{ padding: "6px 13px 7px", fontSize: 10, color: "rgba(255,255,255,0.18)", textAlign: "right" }}>
-            © OpenStreetMap contributors
-          </div>
+          <div style={{padding:"6px 13px 7px",fontSize:10,color:"rgba(255,255,255,0.18)",textAlign:"right"}}>© OpenStreetMap</div>
         </div>
       )}
     </div>
   );
 }
 
-/* ═══════════════════════════ QUICK LINK ═══════════════════════════ */
-function QuickLink({ href, icon, label, variant = "cyan" }) {
+/* ════════════════════════════════════════════════════════
+   RESORT PICKER (shared by onboarding + briefing tab)
+════════════════════════════════════════════════════════ */
+function ResortPicker({ value, onChange }) {
+  const [query, setQuery]     = useState(value || "");
+  const [showDrop, setShowDrop] = useState(false);
+  const selected = IKON_RESORTS.find(r => r.name === value) || null;
+
+  const filtered = useMemo(() => {
+    if (!query.trim()) return IKON_RESORTS.slice(0, 8);
+    const q = query.toLowerCase();
+    return IKON_RESORTS.filter(r => r.name.toLowerCase().includes(q) || r.state.toLowerCase().includes(q)).slice(0, 8);
+  }, [query]);
+
+  if (selected) return (
+    <div className="resort-badge">
+      <i className="ti ti-map-pin" style={{fontSize:12}} />
+      {selected.name}
+      <span className="resort-badge-state">{selected.state}</span>
+      <button className="resort-badge-remove" onClick={() => { onChange(null); setQuery(""); }}>×</button>
+    </div>
+  );
+
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className={`ql-btn ql-${variant}`}>
-      <i className={`ti ${icon}`} style={{ fontSize: 11 }} />
-      {label}
-    </a>
+    <div className="dropdown-wrap">
+      <input className="field-input" type="text" placeholder="Search resorts…" value={query}
+        onChange={e => { setQuery(e.target.value); setShowDrop(true); }}
+        onFocus={() => setShowDrop(true)}
+        onBlur={() => setTimeout(() => setShowDrop(false), 160)} />
+      {showDrop && filtered.length > 0 && (
+        <div className="dropdown">
+          {filtered.map(r => (
+            <div key={r.name} className="dropdown-item" onMouseDown={() => { onChange(r.name); setQuery(""); setShowDrop(false); }}>
+              <span>{r.name}</span>
+              <div className="dropdown-tags">
+                {r.unofficialAlpine && <span className="tag tag-ua">UA</span>}
+                {r.opensnow && <span className="tag tag-os">OS</span>}
+                <span className="tag tag-st">{r.state}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
-/* ═══════════════════════════ SECTION CARD ═══════════════════════════ */
+/* ════════════════════════════════════════════════════════
+   ONBOARDING
+════════════════════════════════════════════════════════ */
+function Onboarding({ onComplete }) {
+  const [step, setStep]     = useState(0);
+  const [name, setName]     = useState('');
+  const [phone, setPhone]   = useState('');
+  const [mountain, setMountain] = useState(null);
+  const [city, setCity]     = useState('');
+  const [sections, setSections] = useState(new Set(ALL_SECTIONS));
+  const [crewMode, setCrewMode] = useState(null); // 'create' | 'join' | null
+  const [crewName, setCrewName] = useState('');
+  const [crewCode, setCrewCode] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  const toggleSection = (s) => setSections(prev => {
+    const next = new Set(prev);
+    if (next.has(s)) next.delete(s); else next.add(s);
+    return next;
+  });
+
+  async function finish() {
+    setSaving(true);
+    const profile = {
+      name: name.trim(),
+      phone: phone.replace(/\D/g, '').slice(-10),
+      home_mountain: mountain,
+      departure_city: city,
+      section_prefs: [...sections],
+    };
+
+    // Save to localStorage immediately
+    const localProfile = { ...profile, id: null, crew: null };
+    saveProfile(localProfile);
+
+    // Try to sync with server
+    try {
+      const r = await fetch('/api/profile', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(profile),
+      });
+      if (r.ok) {
+        const data = await r.json();
+        localProfile.id = data.id;
+
+        // Create or join crew
+        if (crewMode === 'create' && crewName.trim() && data.id) {
+          const cr = await fetch('/api/crew', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: crewName.trim(), profile_id: data.id }),
+          });
+          if (cr.ok) { const crew = await cr.json(); localProfile.crew = crew; }
+        } else if (crewMode === 'join' && crewCode.trim() && data.id) {
+          const jr = await fetch('/api/crew', {
+            method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ invite_code: crewCode.trim(), profile_id: data.id }),
+          });
+          if (jr.ok) { const crew = await jr.json(); localProfile.crew = crew; }
+        }
+        saveProfile(localProfile);
+      }
+    } catch {}
+
+    setSaving(false);
+    onComplete(localProfile);
+  }
+
+  const steps = [
+    { label: 'Step 1 of 4', title: 'Your details', sub: 'So your crew knows who you are, and we can send you check-ins.' },
+    { label: 'Step 2 of 4', title: 'Home mountain', sub: 'We\'ll pre-load your briefing every time you open the app.' },
+    { label: 'Step 3 of 4', title: 'Your briefing', sub: 'Choose what you want to see. You can change this anytime.' },
+    { label: 'Step 4 of 4', title: 'Your crew',     sub: 'Connect with friends to share daily check-ins. Skip to do this later.' },
+  ];
+
+  const heroImg = mountain ? (IKON_RESORTS.find(r => r.name === mountain)?.img || IKON_RESORTS[0].img) : IKON_RESORTS[0].img;
+
+  return (
+    <div className="onboard-root">
+      <div className="onboard-hero">
+        <img className="onboard-hero-img" src={heroImg} alt="" />
+        <div className="onboard-hero-overlay" />
+        <div className="onboard-hero-content">
+          <div className="onboard-eyebrow">SkiBrief · Ikon Pass</div>
+          <div className="onboard-title">{step === 0 ? "Let's set\nyou up" : (mountain || "Your ski app")}</div>
+        </div>
+      </div>
+
+      <div className="onboard-body">
+        <div className="step-dots">
+          {[0,1,2,3].map(i => (
+            <div key={i} className={`step-dot${i===step?' active':i<step?' done':''}`} />
+          ))}
+        </div>
+        <div className="onboard-step-label">{steps[step].label}</div>
+        <div className="onboard-step-title">{steps[step].title}</div>
+        <div className="onboard-step-sub">{steps[step].sub}</div>
+
+        <div className="onboard-fields">
+          {step === 0 && (
+            <>
+              <div className="field-group">
+                <span className="field-label">Your name</span>
+                <input className="field-input" value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Kenda" autoCapitalize="words" autoFocus />
+              </div>
+              <div className="field-group">
+                <span className="field-label">Phone number</span>
+                <input className="field-input" value={phone} onChange={e => setPhone(e.target.value)} placeholder="(415) 555-0100" type="tel" />
+                <div className="phone-hint">Used for crew check-in texts. US numbers only.</div>
+              </div>
+            </>
+          )}
+
+          {step === 1 && (
+            <>
+              <div className="field-group">
+                <span className="field-label">Home mountain</span>
+                <ResortPicker value={mountain} onChange={setMountain} />
+              </div>
+              <div className="field-group">
+                <span className="field-label">Driving from (default)</span>
+                <AddressAutocomplete value={city} onChange={setCity} placeholder="Your city or address" />
+              </div>
+            </>
+          )}
+
+          {step === 2 && (
+            <div className="section-prefs-grid">
+              {ALL_SECTIONS.map(s => (
+                <div key={s} className={`pref-toggle${sections.has(s) ? ' on' : ''}`} onClick={() => toggleSection(s)}>
+                  <div className="pref-check">{sections.has(s) ? '✓' : ''}</div>
+                  <span className="pref-label">{SECTION_LABELS[s]}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {step === 3 && (
+            <div className="crew-options">
+              <button className={`crew-option-btn${crewMode==='create'?' selected':''}`} onClick={() => setCrewMode('create')}>
+                <div className="crew-option-title">Create a crew</div>
+                <div className="crew-option-sub">Start a group and invite friends with a code</div>
+              </button>
+              {crewMode === 'create' && (
+                <div className="field-group" style={{marginLeft:16}}>
+                  <span className="field-label">Crew name</span>
+                  <input className="field-input" value={crewName} onChange={e => setCrewName(e.target.value)} placeholder="e.g. Tahoe Crew" autoCapitalize="words" />
+                </div>
+              )}
+              <button className={`crew-option-btn${crewMode==='join'?' selected':''}`} onClick={() => setCrewMode('join')}>
+                <div className="crew-option-title">Join a crew</div>
+                <div className="crew-option-sub">Enter an invite code from a friend</div>
+              </button>
+              {crewMode === 'join' && (
+                <div className="field-group" style={{marginLeft:16}}>
+                  <span className="field-label">Invite code</span>
+                  <input className="field-input crew-code-input" value={crewCode} onChange={e => setCrewCode(e.target.value.toUpperCase().slice(0,6))} placeholder="ABC123" maxLength={6} />
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        <div className="onboard-actions">
+          {step < 3 ? (
+            <>
+              <button className="onboard-btn-primary"
+                disabled={
+                  (step === 0 && (!name.trim() || phone.replace(/\D/g,'').length < 10)) ||
+                  false
+                }
+                onClick={() => setStep(s => s + 1)}>
+                Continue <i className="ti ti-arrow-right" style={{fontSize:14}} />
+              </button>
+            </>
+          ) : (
+            <>
+              <button className="onboard-btn-primary" disabled={saving} onClick={finish}>
+                {saving ? <><i className="ti ti-loader-2 spin" style={{fontSize:14}} />Saving…</> : <>Let\'s go <i className="ti ti-check" style={{fontSize:14}} /></>}
+              </button>
+              {!crewMode && <button className="onboard-btn-skip" onClick={finish}>Skip</button>}
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════
+   SECTION CARD
+════════════════════════════════════════════════════════ */
 function SectionCard({ section, content, loading, resort }) {
   const meta = SECTION_META[section];
   const isPalisades = resort && resort.parking != null;
   const isTahoe = resort && ["Palisades Tahoe","Alpine Meadows","Sierra-at-Tahoe"].includes(resort.name);
-
   const links = [];
-  if (section === "road" && isTahoe) {
-    links.push(<QuickLink key="eb" href="https://member.everbridge.net/453003085611269/login" icon="ti-shield-check" label="Placer County alerts" variant="orange" />);
-    links.push(<QuickLink key="ct" href="https://quickmap.dot.ca.gov/" icon="ti-map-2" label="Caltrans QuickMap" variant="orange" />);
-  }
+  if (section === "road" && isTahoe)    { links.push(<a key="ct" href="https://quickmap.dot.ca.gov/" target="_blank" rel="noopener noreferrer" className="ql-btn ql-orange"><i className="ti ti-map-2" style={{fontSize:11}}/> Caltrans</a>); }
   if (section === "parking" && isPalisades) {
-    links.push(<QuickLink key="map" href="https://www.parkpalisadestahoe.com/mapnpark" icon="ti-parking" label="Map N Park" />);
-    links.push(<QuickLink key="res" href="https://reservenski.parkpalisadestahoe.com/" icon="ti-calendar-plus" label="Reserve" />);
-    links.push(<QuickLink key="mtn" href="https://www.mountaineertransit.org/" icon="ti-bus" label="Mountaineer" />);
+    links.push(<a key="map" href="https://www.parkpalisadestahoe.com/mapnpark" target="_blank" rel="noopener noreferrer" className="ql-btn ql-cyan"><i className="ti ti-parking" style={{fontSize:11}}/> Map N Park</a>);
+    links.push(<a key="mtn" href="https://www.mountaineertransit.org/" target="_blank" rel="noopener noreferrer" className="ql-btn ql-cyan"><i className="ti ti-bus" style={{fontSize:11}}/> Mountaineer</a>);
   }
-  if (section === "weather" && resort && resort.opensnow) {
-    links.push(<QuickLink key="os" href={`https://opensnow.com/dailysnow/${resort.opensnow}`} icon="ti-snowflake" label="OpenSnow" />);
+  if (section === "weather" && resort?.opensnow) {
+    links.push(<a key="os" href={`https://opensnow.com/dailysnow/${resort.opensnow}`} target="_blank" rel="noopener noreferrer" className="ql-btn ql-cyan"><i className="ti ti-snowflake" style={{fontSize:11}}/> OpenSnow</a>);
   }
-  if (section === "field" && resort && resort.unofficialAlpine) {
-    links.push(<QuickLink key="ua" href="https://unofficialalpine.com/" icon="ti-external-link" label="Unofficial Alpine" variant="green" />);
+  if (section === "field" && resort?.unofficialAlpine) {
+    links.push(<a key="ua" href="https://unofficialalpine.com/" target="_blank" rel="noopener noreferrer" className="ql-btn ql-green"><i className="ti ti-external-link" style={{fontSize:11}}/> Unofficial Alpine</a>);
   }
-
   return (
     <div className="section-card">
       <div className="card-header">
         <div className="card-label-group">
-          <div className="card-icon" style={{ background: meta.accent + "18" }}>
-            <i className={`ti ${meta.icon}`} style={{ fontSize: 15, color: meta.accent }} />
+          <div className="card-icon" style={{background: meta.accent + "18"}}>
+            <i className={`ti ${meta.icon}`} style={{fontSize:15, color: meta.accent}} />
           </div>
-          <span className="card-title" style={{ color: meta.accent }}>{meta.label}</span>
+          <span className="card-title" style={{color: meta.accent}}>{meta.label}</span>
         </div>
         {links.length > 0 && <div className="card-links">{links}</div>}
       </div>
       {loading ? (
         <div className="pulse-row">
-          <div className="pulse-dot" style={{ background: meta.accent }} />
-          <div className="pulse-dot" style={{ background: meta.accent }} />
-          <div className="pulse-dot" style={{ background: meta.accent }} />
-          <span className="pulse-label">Fetching live data…</span>
+          {[0,1,2].map(i => <div key={i} className="pulse-dot" style={{background: meta.accent}} />)}
+          <span className="pulse-label">Fetching…</span>
         </div>
       ) : (
-        <div className={`card-body${!content ? " card-body-empty" : ""}`}>
-          {content || "No data retrieved"}
-        </div>
+        <div className={`card-body${!content?" card-body-empty":""}`}>{content || "No data retrieved"}</div>
       )}
     </div>
   );
 }
 
-/* ═══════════════════════════ OPENSNOW PANEL ═══════════════════════════ */
-function OpenSnowPanel({ resort }) {
-  if (!resort || !resort.opensnow) return null;
-  const base = `https://opensnow.com`;
-  return (
-    <div className="opensnow-panel">
-      <div className="os-badge">
-        <i className="ti ti-snowflake" style={{ fontSize: 12 }} />
-        OpenSnow
-      </div>
-      <div className="os-links">
-        <a href={`${base}/dailysnow/${resort.opensnow}`} target="_blank" rel="noopener noreferrer" className="os-link">Daily snow ↗</a>
-        <span className="os-divider">·</span>
-        <a href={`${base}/location/${resort.opensnow}`} target="_blank" rel="noopener noreferrer" className="os-link">Conditions ↗</a>
-        <span className="os-divider">·</span>
-        <a href={`${base}/forecast/${resort.opensnow}`} target="_blank" rel="noopener noreferrer" className="os-link">7-day ↗</a>
-        <span className="os-divider">·</span>
-        <a href={`${base}/allsnow`} target="_blank" rel="noopener noreferrer" className="os-link">All resorts ↗</a>
-      </div>
-      <span className="os-powered">Powered by OpenSnow</span>
-    </div>
-  );
-}
-
-/* ═══════════════════════════ TRAFFIC PANEL ═══════════════════════════ */
-function TrafficPanel({ resort }) {
-  if (!resort) return null;
-  const chips = resort.highways
-    .map(hw => ({ hw, dot: HIGHWAY_DOT[hw] }))
-    .filter(x => x.dot);
-
-  const mapsUrl = `https://maps.google.com/?daddr=${encodeURIComponent(resort.name + ', ' + resort.state)}`;
-  const wazeUrl = `https://waze.com/ul?q=${encodeURIComponent(resort.name)}&navigate=yes`;
-
-  if (!chips.length) return null;
-
-  return (
-    <div className="traffic-panel">
-      <div className="traffic-header">
-        <i className="ti ti-road" style={{ fontSize: 13 }} />
-        Roads
-      </div>
-      <div className="traffic-chips">
-        {chips.map(({ hw, dot }) => (
-          <a key={hw} href={dot.url} target="_blank" rel="noopener noreferrer" className="traffic-chip">
-            {hw} · {dot.name}
-          </a>
-        ))}
-        <a href={wazeUrl} target="_blank" rel="noopener noreferrer" className="traffic-chip traffic-chip-nav">
-          <i className="ti ti-navigation" style={{ fontSize: 10 }} /> Waze
-        </a>
-        <a href={mapsUrl} target="_blank" rel="noopener noreferrer" className="traffic-chip traffic-chip-nav">
-          <i className="ti ti-map-2" style={{ fontSize: 10 }} /> Maps
-        </a>
-      </div>
-    </div>
-  );
-}
-
-/* ═══════════════════════════ BOTTOM NAV ═══════════════════════════ */
-function BottomNav({ activeTab, setActiveTab, hasParty }) {
-  return (
-    <nav className="bottom-nav">
-      <div className="bottom-nav-inner">
-        <button className={`nav-item${activeTab === 'briefing' ? ' active' : ''}`} onClick={() => setActiveTab('briefing')}>
-          <i className="ti ti-mountain" />
-          Briefing
-        </button>
-        <button className={`nav-item${activeTab === 'party' ? ' active' : ''}`} onClick={() => setActiveTab('party')}>
-          <i className="ti ti-users" />
-          {hasParty && activeTab !== 'party' && <span className="nav-badge">1</span>}
-          Party
-        </button>
-      </div>
-    </nav>
-  );
-}
-
-/* ═══════════════════════════ PARTY TAB ═══════════════════════════ */
-function PartyTab({ resort }) {
-  const [party, setParty]       = useState(() => readPartyFromURL());
-  const [myName, setMyName]     = useState(() => localStorage.getItem('skiMyName') || '');
-  const [joinName, setJoinName] = useState('');
-  const [partyName, setPartyName] = useState(() => resort ? `${resort.name.split(' ')[0]} Crew` : 'Ski Crew');
-  const [partyResort, setPartyResort] = useState(() => resort ? resort.name : '');
-  const [partyDate, setPartyDate]     = useState(new Date().toISOString().slice(0, 10));
-  const [copied, setCopied]     = useState(false);
-
-  useEffect(() => {
-    if (resort && !party) {
-      setPartyName(`${resort.name.split(' ')[0]} Crew`);
-      setPartyResort(resort.name);
-    }
-  }, [resort]);
-
-  function createParty() {
-    const name = myName.trim();
-    if (!name || !partyName.trim()) return;
-    localStorage.setItem('skiMyName', name);
-    const newParty = {
-      n: partyName.trim(),
-      r: partyResort || (resort && resort.name) || '',
-      d: partyDate,
-      m: [{ n: name, s: null, t: new Date().toISOString() }],
-    };
-    setParty(newParty);
-    writePartyToURL(newParty);
-  }
-
-  function updateStatus(statusCode) {
-    const name = myName.trim();
-    if (!party || !name) return;
-    localStorage.setItem('skiMyName', name);
-    const updated = { ...party };
-    const idx = updated.m.findIndex(m => m.n === name);
-    const member = { n: name, s: statusCode, t: new Date().toISOString() };
-    if (idx >= 0) updated.m = updated.m.map((m, i) => i === idx ? member : m);
-    else updated.m = [...updated.m, member];
-    setParty(updated);
-    writePartyToURL(updated);
-  }
-
-  function joinParty() {
-    const name = joinName.trim() || myName.trim();
-    if (!party || !name) return;
-    localStorage.setItem('skiMyName', name);
-    setMyName(name);
-    setJoinName('');
-    if (party.m.some(m => m.n === name)) return;
-    const updated = { ...party, m: [...party.m, { n: name, s: null, t: new Date().toISOString() }] };
-    setParty(updated);
-    writePartyToURL(updated);
-  }
-
-  async function shareParty() {
-    const url = writePartyToURL(party);
-    const shareData = { title: `${party.n} · Ski Party`, text: `Track our ski day at ${party.r}!`, url };
-    if (navigator.share) {
-      try { await navigator.share(shareData); return; } catch {}
-    }
-    try { await navigator.clipboard.writeText(url); } catch {}
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
-  }
-
-  function leaveParty() {
-    setParty(null);
-    writePartyToURL(null);
-  }
-
-  const myMember  = party && myName ? party.m.find(m => m.n === myName.trim()) : null;
-  const imInParty = !!myMember;
-  const isPartyFull = party && party.m.some(m => m.s === 'full');
-  const dateLabel = party
-    ? new Date(party.d + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
-    : '';
-
-  if (!party) {
-    return (
-      <div className="party-root">
-        <div className="party-hero">
-          <div className="party-hero-eyebrow">Coordinate your crew</div>
-          <div className="party-hero-title">🎿 Ski Party</div>
-          <div className="party-hero-sub">Create a party link — share via iMessage, anyone can update their status</div>
-        </div>
-        <div className="party-create">
-          <div className="party-section-title">Your info</div>
-          <div className="party-form" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            <div className="field-group">
-              <span className="field-label">Your name</span>
-              <input className="field-input" value={myName} onChange={e => setMyName(e.target.value)} placeholder="e.g. Adam" autoCapitalize="words" />
-            </div>
-            <div className="party-section-title" style={{ marginTop: 6 }}>Party details</div>
-            <div className="field-group">
-              <span className="field-label">Party name</span>
-              <input className="field-input" value={partyName} onChange={e => setPartyName(e.target.value)} placeholder="e.g. Tahoe Crew" autoCapitalize="words" />
-            </div>
-            <div className="party-row">
-              <div className="field-group" style={{ flex: 2 }}>
-                <span className="field-label">Resort</span>
-                <input className="field-input" value={partyResort} onChange={e => setPartyResort(e.target.value)} placeholder="Resort name" />
-              </div>
-              <div className="field-group" style={{ flex: 1 }}>
-                <span className="field-label">Date</span>
-                <input className="field-input" type="date" value={partyDate} onChange={e => setPartyDate(e.target.value)} />
-              </div>
-            </div>
-            <button className="create-btn" onClick={createParty} disabled={!myName.trim() || !partyName.trim()}>
-              <i className="ti ti-users" style={{ fontSize: 15 }} />
-              Create Party & Get Link
-            </button>
-          </div>
-          <div className="create-hint">
-            Already have a party link? Just open it to join.
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="party-root">
-      <div className="party-hero">
-        <div className="party-hero-eyebrow">{party.r}{party.r && ' · '}{dateLabel}</div>
-        <div className="party-hero-title">🎿 {party.n}</div>
-        <div className="party-hero-sub">{party.m.length} member{party.m.length !== 1 ? 's' : ''} · Share link to add your crew</div>
-      </div>
-
-      <div className="party-card">
-        {isPartyFull && (
-          <div className="party-full-banner">
-            <span style={{ fontSize: 18 }}>🎉</span>
-            <span>Party is full — no more room!</span>
-          </div>
-        )}
-
-        <div className="party-card-header">
-          <div className="party-card-name">{party.n}</div>
-          <div className="party-card-meta">
-            <span>{party.r}</span>
-            {party.r && <span>·</span>}
-            <span>{dateLabel}</span>
-          </div>
-        </div>
-
-        <div className="member-list">
-          {party.m.length === 0 ? (
-            <div className="member-empty">No members yet — share the link!</div>
-          ) : (
-            party.m.map((m, i) => {
-              const statusInfo = STATUSES.find(s => s.code === m.s);
-              const isMe = myName && m.n === myName.trim();
-              return (
-                <div key={i} className="member-row">
-                  <div className="member-emoji">{statusInfo ? statusInfo.emoji : '👤'}</div>
-                  <div className="member-info">
-                    <div className="member-name-row">
-                      {m.n}
-                      {isMe && <span className="member-you">you</span>}
-                    </div>
-                    <div className="member-status-text">
-                      {statusInfo ? statusInfo.label : 'No status yet'}
-                    </div>
-                  </div>
-                  {m.s && <div className="member-time">{formatTime(m.t)}</div>}
-                </div>
-              );
-            })
-          )}
-        </div>
-
-        {!imInParty && (
-          <div className="join-section">
-            <div className="field-group">
-              <span className="field-label">Your name to join</span>
-              <input
-                className="field-input"
-                value={joinName || myName}
-                onChange={e => setJoinName(e.target.value)}
-                placeholder="Enter your name"
-                autoCapitalize="words"
-              />
-            </div>
-            <button className="cta-btn" style={{ padding: '9px 16px', fontSize: 13, alignSelf: 'flex-end' }} onClick={joinParty}>
-              Join
-            </button>
-          </div>
-        )}
-
-        {imInParty && (
-          <div className="your-status-section">
-            <div className="your-status-label">Your status</div>
-            <div className="status-grid">
-              {STATUSES.map(s => {
-                const isSelected = myMember && myMember.s === s.code;
-                const isFull = s.code === 'full';
-                return (
-                  <button
-                    key={s.code}
-                    className={`status-btn${isSelected ? (isFull ? ' selected-full' : ' selected') : ''}`}
-                    onClick={() => updateStatus(s.code)}
-                  >
-                    <span className="status-emoji">{s.emoji}</span>
-                    <span className="status-label">{s.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        <div className="party-actions">
-          <button className={`share-btn${copied ? ' copied' : ''}`} onClick={shareParty}>
-            <i className={`ti ${copied ? 'ti-check' : 'ti-share'}`} style={{ fontSize: 14 }} />
-            {copied ? 'Link copied!' : 'Share party link'}
-          </button>
-          <button className="leave-btn" onClick={leaveParty}>Leave this party</button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ═══════════════════════════ APP ═══════════════════════════ */
-function App() {
-  const hasPartyInUrl = new URLSearchParams(window.location.search).has('party');
-  const [activeTab, setActiveTab] = useState(hasPartyInUrl ? 'party' : 'briefing');
-
-  const [query, setQuery]       = useState("");
-  const [resort, setResort]     = useState(null);
-  const [showDrop, setShowDrop] = useState(false);
-  const [origin, setOrigin]     = useState("San Francisco, CA");
-  const [date, setDate]         = useState(new Date().toISOString().slice(0, 10));
-  const [loading, setLoading]   = useState(false);
-  const [result, setResult]     = useState(null);
-  const [error, setError]       = useState(null);
+/* ════════════════════════════════════════════════════════
+   BRIEFING TAB
+════════════════════════════════════════════════════════ */
+function BriefingTab({ profile, showToast }) {
+  const homeMountain = profile?.home_mountain ? IKON_RESORTS.find(r => r.name === profile.home_mountain) : null;
+  const [resort, setResort] = useState(homeMountain || null);
+  const [origin, setOrigin] = useState(profile?.departure_city || "San Francisco, CA");
+  const [date, setDate]     = useState(new Date().toISOString().slice(0, 10));
+  const [loading, setLoading] = useState(false);
+  const [result, setResult]   = useState(null);
+  const [error, setError]     = useState(null);
   const [heroLoaded, setHeroLoaded] = useState(false);
-  const [notifGranted, setNotifGranted] = useState(
-    typeof Notification !== 'undefined' && Notification.permission === 'granted'
-  );
-  const [reminderSet, setReminderSet] = useState(false);
-  const [toast, setToast] = useState(null);
-  const toastRef = useRef(null);
-
-  const filtered = useMemo(() => {
-    if (!query.trim()) return [];
-    const q = query.toLowerCase();
-    return IKON_RESORTS.filter(r =>
-      r.name.toLowerCase().includes(q) || r.state.toLowerCase().includes(q) || r.region.toLowerCase().includes(q)
-    ).slice(0, 8);
-  }, [query]);
 
   useEffect(() => { setHeroLoaded(false); }, [resort]);
 
+  const activeSections = profile?.section_prefs || ALL_SECTIONS;
   const today     = new Date(date + "T12:00:00");
   const dateLabel = today.toLocaleDateString("en-US", { weekday:"long", month:"long", day:"numeric", year:"numeric" });
   const dayOfWeek = today.toLocaleDateString("en-US", { weekday:"long" });
   const isWeekend = ["Saturday","Sunday"].includes(dayOfWeek);
   const isTahoe   = resort && ["Palisades Tahoe","Alpine Meadows","Sierra-at-Tahoe"].includes(resort.name);
 
-  function pickResort(r) {
-    setResort(r); setQuery(""); setShowDrop(false); setResult(null); setError(null);
+  async function fetchBriefing() {
+    if (!resort) return;
+    setLoading(true); setError(null); setResult(null);
+    const avalancheSource = resort.avalanche !== "N/A" ? `Sierra Avalanche Center at https://www.sierraavalanchecenter.org/` : `regional avalanche center for ${resort.name}`;
+    const placerNote = isTahoe ? `Also search for Placer County Sheriff alerts and Caltrans chain control on ${resort.highways.join(", ")}.` : `Check chain control/incidents on ${resort.highways.join(", ")}.`;
+    const parkingBlock = resort.parking ? `5. PARKING: Search parkpalisadestahoe.com. Today is ${dayOfWeek}. ${isWeekend ? "Weekend: reservations required." : "Weekday: first-come first-served."} Mountaineer wait estimate.` : `5. PARKING: General parking info for ${resort.name}.`;
+    const uaBlock = resort.unofficialAlpine ? `1. FIELD REPORT: Fetch https://unofficialalpine.com/ and summarize the most recent conditions post. 3-4 sentences.` : `1. FIELD REPORT: Search for the most recent community conditions report for ${resort.name}.`;
+    const prompt = `You are a ski day prep assistant. Today is ${dateLabel} (${dayOfWeek}). The skier is driving from ${origin} to ${resort.name} (${resort.state}, ${resort.elevation.toLocaleString()} ft).\n\nCompile a complete ski day briefing:\n\n${uaBlock}\n\n2. ROAD & TRAFFIC: ${resort.highways.join(", ")} between ${origin} and ${resort.name}. Drive time, closures, chain control. ${placerNote}\n\n3. LIFTS: ${resort.url} — open and closed lifts.\n\n4. TRAILS: Same — open run counts by difficulty.\n\n${parkingBlock}\n\n6. AVALANCHE: ${avalancheSource} — danger rating, hazard type, terrain to avoid.\n\n7. WEATHER: Temp, wind, precipitation for ${resort.name} today. Gear list.\n\n8. GAME PLAN: 4-5 bullet points — departure time, parking strategy, best zones, go/no-go.\n\nUse EXACTLY these section headers:\nFIELD REPORT:\nROAD:\nLIFTS:\nTRAILS:\nPARKING:\nAVALANCHE:\nWEATHER:\nGAME PLAN:`;
+
+    try {
+      const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model: "claude-sonnet-4-5", max_tokens: 1800, tools: [{ type: "web_search_20250305", name: "web_search" }], messages: [{ role: "user", content: prompt }] }) });
+      if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || "API error"); }
+      const data = await res.json();
+      const text = data.content.filter(b => b.type === "text").map(b => b.text).join("\n");
+      const parsed = {};
+      for (const k of ALL_SECTIONS) parsed[k] = parseSection(text, k);
+      setResult(parsed);
+    } catch(e) { setError(e.message); }
+    finally { setLoading(false); }
   }
+
+  const heroImg = (resort?.img) || "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1200&q=80";
+  const chips = resort ? resort.highways.map(hw => ({ hw, dot: HIGHWAY_DOT[hw] })).filter(x => x.dot) : [];
+  const mapsUrl = resort ? `https://maps.google.com/?daddr=${encodeURIComponent(resort.name + ', ' + resort.state)}` : '#';
+  const wazeUrl = resort ? `https://waze.com/ul?q=${encodeURIComponent(resort.name)}&navigate=yes` : '#';
+
+  return (
+    <>
+      <div className="hero">
+        <img className="hero-img" src={heroImg} alt="" onLoad={() => setHeroLoaded(true)} style={{opacity: heroLoaded ? 1 : 0}} />
+        <div className="hero-overlay" />
+        <div className="hero-content">
+          <div className="hero-eyebrow">
+            {resort ? `${resort.region} · ${resort.elevation.toLocaleString()} ft · Ikon Pass` : profile ? `Welcome back, ${profile.name}` : "Ikon Pass · SkiBrief"}
+            {resort?.opensnow && (
+              <a href={`https://opensnow.com/dailysnow/${resort.opensnow}`} target="_blank" rel="noopener noreferrer" className="hero-os-badge">
+                <i className="ti ti-snowflake" style={{fontSize:9}} /> OpenSnow
+              </a>
+            )}
+          </div>
+          <div className="hero-title">{resort ? resort.name : "Where are\nyou skiing?"}</div>
+          <div className="hero-sub">{resort ? `${resort.state} · ${resort.highways.join(" · ")} · ${dateLabel}` : "Live conditions · road alerts · avalanche · game plan"}</div>
+        </div>
+      </div>
+
+      <div className="controls">
+        <div className="field-group" style={{flex:2, minWidth:180}}>
+          <span className="field-label">Resort</span>
+          <ResortPicker value={resort?.name || null} onChange={name => { const r = IKON_RESORTS.find(x => x.name === name); setResort(r||null); setResult(null); setError(null); }} />
+        </div>
+        <div className="field-group" style={{flex:2, minWidth:150}}>
+          <span className="field-label">Driving from</span>
+          <AddressAutocomplete value={origin} onChange={setOrigin} placeholder="Your city or address…" />
+        </div>
+        <div className="field-group" style={{flex:1, minWidth:130}}>
+          <span className="field-label">Date</span>
+          <input className="field-input" type="date" value={date} onChange={e => setDate(e.target.value)} />
+        </div>
+        <button className="cta-btn" onClick={fetchBriefing} disabled={loading || !resort}>
+          {loading ? <><i className="ti ti-loader-2 spin" style={{fontSize:14}} />Loading…</> : <><i className="ti ti-refresh" style={{fontSize:14}} />Get briefing</>}
+        </button>
+      </div>
+
+      {resort?.opensnow && (
+        <div className="opensnow-panel">
+          <div className="os-badge"><i className="ti ti-snowflake" style={{fontSize:12}} /> OpenSnow</div>
+          <div className="os-links">
+            <a href={`https://opensnow.com/dailysnow/${resort.opensnow}`} target="_blank" rel="noopener noreferrer" className="os-link">Daily snow ↗</a>
+            <span className="os-divider">·</span>
+            <a href={`https://opensnow.com/location/${resort.opensnow}`} target="_blank" rel="noopener noreferrer" className="os-link">Conditions ↗</a>
+            <span className="os-divider">·</span>
+            <a href={`https://opensnow.com/forecast/${resort.opensnow}`} target="_blank" rel="noopener noreferrer" className="os-link">7-day ↗</a>
+          </div>
+          <span className="os-powered">Powered by OpenSnow</span>
+        </div>
+      )}
+
+      {chips.length > 0 && (
+        <div className="traffic-panel">
+          <div className="traffic-header"><i className="ti ti-road" style={{fontSize:13}} /> Roads</div>
+          <div className="traffic-chips">
+            {chips.map(({ hw, dot }) => <a key={hw} href={dot.url} target="_blank" rel="noopener noreferrer" className="traffic-chip">{hw} · {dot.name}</a>)}
+            <a href={wazeUrl} target="_blank" rel="noopener noreferrer" className="traffic-chip traffic-chip-nav"><i className="ti ti-navigation" style={{fontSize:10}} /> Waze</a>
+            <a href={mapsUrl} target="_blank" rel="noopener noreferrer" className="traffic-chip traffic-chip-nav"><i className="ti ti-map-2" style={{fontSize:10}} /> Maps</a>
+          </div>
+        </div>
+      )}
+
+      {resort && (
+        <div className="quick-links">
+          {resort.opensnow && <a href={`https://opensnow.com/dailysnow/${resort.opensnow}`} target="_blank" rel="noopener noreferrer" className="ql-btn ql-cyan"><i className="ti ti-snowflake" style={{fontSize:11}}/> OpenSnow forecast</a>}
+          {resort.unofficialAlpine && <a href="https://unofficialalpine.com/" target="_blank" rel="noopener noreferrer" className="ql-btn ql-green"><i className="ti ti-pencil" style={{fontSize:11}}/> Unofficial Alpine</a>}
+          {resort.parking && <a href="https://www.parkpalisadestahoe.com/mapnpark" target="_blank" rel="noopener noreferrer" className="ql-btn ql-cyan"><i className="ti ti-parking" style={{fontSize:11}}/> Map N Park</a>}
+          {isTahoe && <a href="https://member.everbridge.net/453003085611269/login" target="_blank" rel="noopener noreferrer" className="ql-btn ql-orange"><i className="ti ti-shield-check" style={{fontSize:11}}/> Placer Co. alerts</a>}
+          <a href={resort.url} target="_blank" rel="noopener noreferrer" className="ql-btn ql-amber"><i className="ti ti-mountain" style={{fontSize:11}}/> Mountain report</a>
+        </div>
+      )}
+
+      {isTahoe && (
+        <div className="tahoe-notice">
+          <i className="ti ti-alert-triangle" style={{fontSize:14, flexShrink:0, marginTop:1}} />
+          <span>Tahoe resort — includes Placer County alerts, Caltrans chain control, and Mountaineer wait estimate. Live alerts: <a href="https://member.everbridge.net/453003085611269/login" target="_blank" rel="noopener noreferrer">Everbridge ↗</a></span>
+        </div>
+      )}
+
+      {error && <div className="error-bar"><i className="ti ti-alert-circle" style={{fontSize:14}} />{error}. Check your connection and try again.</div>}
+
+      {result && (
+        <div style={{padding:"16px 28px 0"}}>
+          <div className="result-pill"><i className="ti ti-check" style={{fontSize:11}} /> Live briefing · {resort?.name} · {dateLabel}</div>
+        </div>
+      )}
+
+      {(loading || result) && (
+        <div className="cards appear">
+          {activeSections.map(s => <SectionCard key={s} section={s} content={result && result[s]} loading={loading && !result} resort={resort} />)}
+        </div>
+      )}
+
+      {!loading && !result && !error && (
+        <div className="empty">
+          <i className="ti ti-mountain empty-icon" />
+          <div className="empty-text">
+            {profile?.home_mountain ? `${resort ? 'Hit Get Briefing to load live conditions' : 'Your home mountain is ' + profile.home_mountain}` : 'Search for an Ikon Pass resort above,\nset your departure city and date, then hit Get Briefing.'}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+/* ════════════════════════════════════════════════════════
+   CREW TAB
+════════════════════════════════════════════════════════ */
+function CrewTab({ profile, showToast }) {
+  const [crewData, setCrewData] = useState(null);
+  const [loadingCrew, setLoadingCrew] = useState(false);
+  const [sendingCheckin, setSendingCheckin] = useState(false);
+  const [checkinDate, setCheckinDate] = useState(tomorrowStr());
+
+  const crew = profile?.crew;
+
+  useEffect(() => {
+    if (crew?.id) loadCrew(crew.id);
+  }, [crew?.id]);
+
+  async function loadCrew(id) {
+    setLoadingCrew(true);
+    try {
+      const r = await fetch(`/api/crew?id=${id}`);
+      if (r.ok) setCrewData(await r.json());
+    } catch {}
+    setLoadingCrew(false);
+  }
+
+  async function sendCheckin() {
+    if (!profile?.id || !crew?.id) return;
+    setSendingCheckin(true);
+    try {
+      const r = await fetch('/api/checkin', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ crew_id: crew.id, profile_id: profile.id, date: checkinDate }),
+      });
+      const data = await r.json();
+      if (r.ok) {
+        showToast(`📲 Check-in sent to ${data.members_count} crew member${data.members_count !== 1 ? 's' : ''}!`);
+        setTimeout(() => loadCrew(crew.id), 1000);
+      } else {
+        showToast(`Error: ${data.error}`);
+      }
+    } catch (e) { showToast('Failed to send check-in'); }
+    setSendingCheckin(false);
+  }
+
+  async function copyInvite() {
+    const code = crewData?.crew?.invite_code || crew?.invite_code;
+    if (!code) return;
+    try { await navigator.clipboard.writeText(code); showToast(`📋 Code ${code} copied!`); }
+    catch { showToast(`Invite code: ${code}`); }
+  }
+
+  if (!crew) {
+    return (
+      <div className="crew-root">
+        <div className="crew-empty-state">
+          <span className="crew-empty-icon">👥</span>
+          <div className="crew-empty-title">No crew yet</div>
+          <div className="crew-empty-sub">Create a crew or join one with an invite code. Your whole group will get SMS check-ins and see each other's plans.</div>
+          <button className="crew-setup-btn" onClick={() => {}}>
+            <i className="ti ti-users-plus" style={{fontSize:15}} /> Set up a crew
+          </button>
+          <div style={{marginTop:8, fontSize:12, color:'rgba(255,255,255,0.2)'}}>
+            (Go to Profile tab → Crew to get started)
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const members  = crewData?.members   || [];
+  const reactions= crewData?.reactions || [];
+  const checkIn  = crewData?.check_in;
+
+  const memberStatus = members.map(m => {
+    const rxn = reactions.find(r => r.profile_id === m.profile_id);
+    return { ...m, activity: rxn?.activity || null, reacted_at: rxn?.reacted_at || null };
+  }).sort((a, b) => {
+    if (a.activity && !b.activity) return -1;
+    if (!a.activity && b.activity) return 1;
+    return 0;
+  });
+
+  const dateLabel = checkin => {
+    if (!checkin) return '';
+    const d = new Date(checkin.date + 'T12:00:00');
+    return d.toLocaleDateString('en-US', { weekday:'long', month:'short', day:'numeric' });
+  };
+
+  const crewName  = crewData?.crew?.name  || crew?.name  || 'Your Crew';
+  const inviteCode= crewData?.crew?.invite_code || crew?.invite_code || '';
+
+  return (
+    <div className="crew-root">
+      <div className="crew-page-header">
+        <div className="crew-page-eyebrow">Your crew</div>
+        <div className="crew-page-title">{crewName}</div>
+      </div>
+
+      {checkIn && (
+        <div className="crew-section">
+          <div className="date-strip">
+            <div className="date-strip-line" />
+            <span>{dateLabel(checkIn)}</span>
+            <div className="date-strip-line" />
+          </div>
+          <div className="crew-member-list">
+            {memberStatus.length === 0 ? (
+              <div style={{color:'rgba(255,255,255,0.3)', fontSize:13, padding:'8px 0'}}>No responses yet.</div>
+            ) : (
+              memberStatus.map((m, i) => {
+                const act = m.activity ? ACTIVITIES[m.activity] : null;
+                const isMe = m.profile_id === profile?.id;
+                return (
+                  <div key={i} className="crew-member-row">
+                    <div className="crew-member-emoji">{act ? act.emoji : '·'}</div>
+                    <div className="crew-member-info">
+                      <div className="crew-member-name">
+                        {m.name}
+                        {isMe && <span className="you-badge">you</span>}
+                      </div>
+                      <div className={`crew-member-activity${act ? ' ' + act.color : ' pending-dot'}`}>
+                        {act ? act.label : 'No response yet'}
+                      </div>
+                    </div>
+                    {m.reacted_at && <div className="crew-member-time">{formatTime(m.reacted_at)}</div>}
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+      )}
+
+      <div className="crew-section">
+        <div className="crew-section-label">Send check-in</div>
+        <div style={{display:'flex', gap:8, marginBottom:10}}>
+          <div className="field-group" style={{flex:1}}>
+            <span className="field-label">For date</span>
+            <input className="field-input" type="date" value={checkinDate} onChange={e => setCheckinDate(e.target.value)} min={todayStr()} />
+          </div>
+        </div>
+        <button className="checkin-btn" onClick={sendCheckin} disabled={sendingCheckin || !profile?.id}>
+          {sendingCheckin
+            ? <><i className="ti ti-loader-2 spin" style={{fontSize:15}} /> Sending…</>
+            : <><i className="ti ti-send" style={{fontSize:15}} /> Text crew for {new Date(checkinDate + 'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})}</>
+          }
+        </button>
+        <div className="sent-note">
+          Each member gets an SMS with one-tap links: Skiing · Lake · Golf · Home
+        </div>
+      </div>
+
+      <div className="crew-section">
+        <div className="crew-section-label">Invite</div>
+        <div className="invite-row">
+          <div className="invite-code">{inviteCode || '———'}</div>
+          <button className="copy-btn" onClick={copyInvite}>Copy code</button>
+        </div>
+        <div style={{marginTop:8, fontSize:11, color:'rgba(255,255,255,0.25)'}}>Share this code so friends can join your crew.</div>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════
+   PROFILE TAB
+════════════════════════════════════════════════════════ */
+function ProfileTab({ profile, setProfile, showToast }) {
+  const [name, setName]         = useState(profile?.name || '');
+  const [phone, setPhone]       = useState(profile?.phone || '');
+  const [city, setCity]         = useState(profile?.departure_city || '');
+  const [mountain, setMountain] = useState(profile?.home_mountain || null);
+  const [sections, setSections] = useState(new Set(profile?.section_prefs || ALL_SECTIONS));
+  const [crewCode, setCrewCode] = useState('');
+  const [crewName, setCrewName] = useState('');
+  const [joiningCrew, setJoiningCrew] = useState(false);
+  const [creatingCrew, setCreatingCrew] = useState(false);
+  const [saved, setSaved]       = useState(false);
+  const saveTimer               = useRef(null);
+
+  function toggleSection(s) {
+    setSections(prev => { const n = new Set(prev); if (n.has(s)) n.delete(s); else n.add(s); return n; });
+  }
+
+  async function saveChanges() {
+    const updated = { ...profile, name, phone: phone.replace(/\D/g,'').slice(-10), home_mountain: mountain, departure_city: city, section_prefs: [...sections] };
+    saveProfile(updated);
+    setProfile(updated);
+    setSaved(true);
+    clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => setSaved(false), 2500);
+
+    if (profile?.id) {
+      try {
+        await fetch('/api/profile', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: profile.id, name, phone: updated.phone, home_mountain: mountain, departure_city: city, section_prefs: [...sections] }) });
+      } catch {}
+    }
+  }
+
+  async function joinCrew() {
+    if (!crewCode.trim() || !profile?.id) return;
+    setJoiningCrew(true);
+    try {
+      const r = await fetch('/api/crew', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ invite_code: crewCode.trim(), profile_id: profile.id }) });
+      const data = await r.json();
+      if (r.ok) {
+        const updated = { ...profile, crew: data };
+        saveProfile(updated); setProfile(updated);
+        showToast(`👥 Joined ${data.name}!`); setCrewCode('');
+      } else { showToast(`Error: ${data.error}`); }
+    } catch { showToast('Failed to join crew'); }
+    setJoiningCrew(false);
+  }
+
+  async function createCrew() {
+    if (!crewName.trim() || !profile?.id) return;
+    setCreatingCrew(true);
+    try {
+      const r = await fetch('/api/crew', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: crewName.trim(), profile_id: profile.id }) });
+      const data = await r.json();
+      if (r.ok) {
+        const updated = { ...profile, crew: data };
+        saveProfile(updated); setProfile(updated);
+        showToast(`✅ ${data.name} created! Code: ${data.invite_code}`); setCrewName('');
+      } else { showToast(`Error: ${data.error}`); }
+    } catch { showToast('Failed to create crew'); }
+    setCreatingCrew(false);
+  }
+
+  function resetApp() {
+    if (!confirm('Reset your profile? You\'ll go through setup again.')) return;
+    localStorage.removeItem('skiProfile');
+    window.location.reload();
+  }
+
+  return (
+    <div className="profile-root">
+      <div className="profile-header">
+        <div className="profile-greeting">Your profile</div>
+        <div className="profile-name">{profile?.name || 'Skier'}</div>
+      </div>
+
+      <div className="profile-section">
+        <div className="profile-section-label">Personal info</div>
+        <div className="profile-fields">
+          <div className="field-group">
+            <span className="field-label">Name</span>
+            <input className="field-input" value={name} onChange={e => setName(e.target.value)} />
+          </div>
+          <div className="field-group">
+            <span className="field-label">Phone (for SMS check-ins)</span>
+            <input className="field-input" value={phone} onChange={e => setPhone(e.target.value)} type="tel" placeholder="(415) 555-0100" />
+          </div>
+        </div>
+      </div>
+
+      <div className="profile-section">
+        <div className="profile-section-label">Skiing defaults</div>
+        <div className="profile-fields">
+          <div className="field-group">
+            <span className="field-label">Home mountain</span>
+            <ResortPicker value={mountain} onChange={setMountain} />
+          </div>
+          <div className="field-group">
+            <span className="field-label">Driving from</span>
+            <AddressAutocomplete value={city} onChange={setCity} placeholder="Your city or address" />
+          </div>
+        </div>
+      </div>
+
+      <div className="profile-section">
+        <div className="profile-section-label">Briefing sections</div>
+        <div className="section-prefs-grid">
+          {ALL_SECTIONS.map(s => (
+            <div key={s} className={`pref-toggle${sections.has(s)?' on':''}`} onClick={() => toggleSection(s)}>
+              <div className="pref-check">{sections.has(s)?'✓':''}</div>
+              <span className="pref-label">{SECTION_LABELS[s]}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{padding:'16px 28px'}}>
+        <button className="cta-btn" style={{width:'100%', justifyContent:'center'}} onClick={saveChanges}>
+          {saved ? <><i className="ti ti-check" style={{fontSize:14}} /> Saved!</> : <><i className="ti ti-device-floppy" style={{fontSize:14}} /> Save changes</>}
+        </button>
+      </div>
+
+      <div className="profile-section">
+        <div className="profile-section-label">Crew</div>
+        {profile?.crew ? (
+          <div>
+            <div style={{fontSize:14, color:'#e8edf2', fontWeight:500, marginBottom:4}}>{profile.crew.name}</div>
+            <div style={{fontSize:12, color:'rgba(255,255,255,0.35)', marginBottom:12}}>Invite code: <strong style={{color:'rgba(255,255,255,0.6)', letterSpacing:'0.1em'}}>{profile.crew.invite_code}</strong></div>
+            <button className="danger-btn" onClick={async () => {
+              if (!confirm('Leave this crew?')) return;
+              if (profile?.id && profile?.crew?.id) {
+                await fetch('/api/crew', { method:'DELETE', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ crew_id: profile.crew.id, profile_id: profile.id }) });
+              }
+              const updated = { ...profile, crew: null };
+              saveProfile(updated); setProfile(updated);
+              showToast('Left crew.');
+            }}>Leave crew</button>
+          </div>
+        ) : (
+          <div style={{display:'flex', flexDirection:'column', gap:12}}>
+            <div style={{display:'flex', gap:8}}>
+              <div className="field-group" style={{flex:1}}>
+                <span className="field-label">Create new crew</span>
+                <input className="field-input" value={crewName} onChange={e => setCrewName(e.target.value)} placeholder="e.g. Tahoe Crew" autoCapitalize="words" />
+              </div>
+              <button className="cta-btn" style={{alignSelf:'flex-end', padding:'9px 14px', fontSize:12}} onClick={createCrew} disabled={creatingCrew || !crewName.trim()}>
+                {creatingCrew ? <i className="ti ti-loader-2 spin" style={{fontSize:13}} /> : 'Create'}
+              </button>
+            </div>
+            <div style={{display:'flex', gap:8}}>
+              <div className="field-group" style={{flex:1}}>
+                <span className="field-label">Join with code</span>
+                <input className="field-input crew-code-input" value={crewCode} onChange={e => setCrewCode(e.target.value.toUpperCase().slice(0,6))} placeholder="ABC123" maxLength={6} />
+              </div>
+              <button className="cta-btn" style={{alignSelf:'flex-end', padding:'9px 14px', fontSize:12}} onClick={joinCrew} disabled={joiningCrew || crewCode.length < 4}>
+                {joiningCrew ? <i className="ti ti-loader-2 spin" style={{fontSize:13}} /> : 'Join'}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="profile-section">
+        <button className="danger-btn" onClick={resetApp}>Reset profile &amp; start over</button>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════
+   BOTTOM NAV
+════════════════════════════════════════════════════════ */
+function BottomNav({ activeTab, setActiveTab }) {
+  return (
+    <nav className="bottom-nav">
+      <div className="bottom-nav-inner">
+        <button className={`nav-item${activeTab==='briefing'?' active':''}`} onClick={() => setActiveTab('briefing')}>
+          <i className="ti ti-mountain" />Briefing
+        </button>
+        <button className={`nav-item${activeTab==='crew'?' active':''}`} onClick={() => setActiveTab('crew')}>
+          <i className="ti ti-users" />Crew
+        </button>
+        <button className={`nav-item${activeTab==='profile'?' active':''}`} onClick={() => setActiveTab('profile')}>
+          <i className="ti ti-user" />Profile
+        </button>
+      </div>
+    </nav>
+  );
+}
+
+/* ════════════════════════════════════════════════════════
+   APP ROOT
+════════════════════════════════════════════════════════ */
+function App() {
+  const [profile, setProfileState] = useState(() => loadProfile());
+  const [activeTab, setActiveTab]  = useState('briefing');
+  const [toast, setToast]          = useState(null);
+  const toastRef = useRef(null);
+
+  function setProfile(p) { setProfileState(p); saveProfile(p); }
 
   function showToast(msg, duration = 2800) {
     if (toastRef.current) clearTimeout(toastRef.current);
@@ -939,261 +1274,21 @@ function App() {
     toastRef.current = setTimeout(() => setToast(null), duration);
   }
 
-  async function requestNotifications() {
-    if (!('Notification' in window)) { showToast('Notifications not supported in this browser'); return; }
-    const permission = await Notification.requestPermission();
-    if (permission === 'granted') {
-      setNotifGranted(true);
-      const reminderDate = new Date(date + 'T06:30:00');
-      const delay = reminderDate.getTime() - Date.now();
-      if (resort && delay > 0) {
-        setTimeout(() => {
-          new Notification(`☀️ Ski day at ${resort.name}!`, {
-            body: 'Tap to get your AI-powered briefing.',
-            icon: '/icon.svg',
-          });
-        }, delay);
-        setReminderSet(true);
-        showToast(`🔔 Reminder set for ${reminderDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} at 6:30 AM`);
-      } else {
-        showToast('🔔 Notifications enabled');
-      }
-    }
+  function handleOnboardingComplete(p) { setProfile(p); }
+
+  if (!profile) {
+    return <Onboarding onComplete={handleOnboardingComplete} />;
   }
-
-  async function fetchBriefing() {
-    if (!resort) return;
-    setLoading(true); setError(null); setResult(null);
-
-    const avalancheSource = resort.avalanche !== "N/A"
-      ? `Sierra Avalanche Center at https://www.sierraavalanchecenter.org/`
-      : `regional avalanche center for ${resort.name}`;
-
-    const placerNote = isTahoe
-      ? `Also search for public Placer County Sheriff alerts and Caltrans chain control on ${resort.highways.join(", ")}.`
-      : `Check chain control/incidents on ${resort.highways.join(", ")}.`;
-
-    const parkingBlock = resort.parking
-      ? `5. PARKING & MOUNTAINEER: Search parkpalisadestahoe.com for lot availability. Today is ${dayOfWeek}. ${isWeekend ? "Weekend: reservations required." : "Weekday: no reservation needed, first-come first-served."} Mountaineer wait estimate: avg <15 min low demand; 30+ min weekends/powder days 8-10am & 3-6pm.`
-      : `5. PARKING: General parking info/tips for ${resort.name}.`;
-
-    const uaBlock = resort.unofficialAlpine
-      ? `1. FIELD REPORT: Fetch https://unofficialalpine.com/ and summarize the most recent post about conditions at Alpine Meadows or Palisades Tahoe — key observations about snow quality, terrain, and any warnings. 3-4 sentences.`
-      : `1. FIELD REPORT: Search for the most recent community or blogger conditions report for ${resort.name} from this week.`;
-
-    const prompt = `You are a ski day prep assistant. Today is ${dateLabel} (${dayOfWeek}). The skier is driving from ${origin} to ${resort.name} (${resort.state}, ${resort.elevation.toLocaleString()} ft).
-
-Compile a complete ski day briefing:
-
-${uaBlock}
-
-2. ROAD & TRAFFIC: Caltrans QuickMap https://quickmap.dot.ca.gov/ and Google Maps on ${resort.highways.join(", ")} between ${origin} and ${resort.name}. Drive time, closures, chain control. ${placerNote}
-
-3. LIFTS: ${resort.url} — open and closed lifts.
-
-4. TRAILS: Same — open run counts by difficulty (green/blue/black/double-black).
-
-${parkingBlock}
-
-6. AVALANCHE: ${avalancheSource} — danger rating 1-5, hazard type, terrain to avoid.
-
-7. WEATHER: Temp, wind, precipitation, visibility for ${resort.name} today. Then specific gear list.
-
-8. GAME PLAN: 4-5 bullet point action items — departure time, parking strategy, best zones, timing, go/no-go.
-
-Use EXACTLY these section headers (with colon):
-FIELD REPORT:
-ROAD:
-LIFTS:
-TRAILS:
-PARKING:
-AVALANCHE:
-WEATHER:
-GAME PLAN:`;
-
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-5",
-          max_tokens: 1800,
-          tools: [{ type: "web_search_20250305", name: "web_search" }],
-          messages: [{ role: "user", content: prompt }],
-        }),
-      });
-      if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || "API error"); }
-      const data = await res.json();
-      const text = data.content.filter(b => b.type === "text").map(b => b.text).join("\n");
-      const parsed = {};
-      for (const k of SECTIONS) parsed[k] = parseSection(text, k);
-      setResult(parsed);
-    } catch(e) { setError(e.message); }
-    finally { setLoading(false); }
-  }
-
-  const heroImg = (resort && resort.img) || "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1200&q=80";
 
   return (
     <div className="ski-root">
-      {activeTab === 'briefing' && (
-        <>
-          <div className="hero">
-            <img className="hero-img" src={heroImg} alt="" onLoad={() => setHeroLoaded(true)} style={{ opacity: heroLoaded ? 1 : 0 }} />
-            <div className="hero-overlay" />
-            <div className="hero-content">
-              <div className="hero-eyebrow">
-                {resort ? `${resort.region} · ${resort.elevation.toLocaleString()} ft · Ikon Pass` : "Ikon Pass · Ski Day Briefing"}
-                {resort && resort.opensnow && (
-                  <a href={`https://opensnow.com/dailysnow/${resort.opensnow}`} target="_blank" rel="noopener noreferrer" className="hero-os-badge">
-                    <i className="ti ti-snowflake" style={{ fontSize: 9 }} /> OpenSnow
-                  </a>
-                )}
-              </div>
-              <div className="hero-title">
-                {resort ? resort.name : "Where are\nyou skiing?"}
-              </div>
-              <div className="hero-sub">
-                {resort
-                  ? `${resort.state} · ${resort.highways.join(" · ")} · ${dateLabel}`
-                  : "Live conditions · road alerts · avalanche · gear · game plan"}
-              </div>
-            </div>
-          </div>
-
-          <div className="controls">
-            <div className="field-group" style={{ flex: 2, minWidth: 180, position: "relative" }}>
-              <span className="field-label">Resort</span>
-              {resort ? (
-                <div className="resort-badge">
-                  <i className="ti ti-map-pin" style={{ fontSize: 12 }} />
-                  {resort.name}
-                  <span className="resort-badge-state">{resort.state}</span>
-                  <button className="resort-badge-remove" onClick={() => { setResort(null); setResult(null); }}>×</button>
-                </div>
-              ) : (
-                <div className="dropdown-wrap">
-                  <input className="field-input" type="text" placeholder="Search resorts…" value={query}
-                    onChange={e => { setQuery(e.target.value); setShowDrop(true); }}
-                    onFocus={() => setShowDrop(true)}
-                    onBlur={() => setTimeout(() => setShowDrop(false), 160)} />
-                  {showDrop && filtered.length > 0 && (
-                    <div className="dropdown">
-                      {filtered.map(r => (
-                        <div key={r.name} className="dropdown-item" onMouseDown={() => pickResort(r)}>
-                          <span>{r.name}</span>
-                          <div className="dropdown-tags">
-                            {r.unofficialAlpine && <span className="tag tag-ua">UA</span>}
-                            {r.opensnow && <span className="tag tag-os">OS</span>}
-                            <span className="tag tag-st">{r.state}</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  {showDrop && query.length > 1 && filtered.length === 0 && (
-                    <div className="dropdown"><div className="dropdown-empty">No Ikon resorts matching "{query}"</div></div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            <div className="field-group" style={{ flex: 2, minWidth: 150 }}>
-              <span className="field-label">Driving from</span>
-              <AddressAutocomplete value={origin} onChange={setOrigin} placeholder="Start typing your city or address…" />
-            </div>
-
-            <div className="field-group" style={{ flex: 1, minWidth: 130 }}>
-              <span className="field-label">Date</span>
-              <input className="field-input" type="date" value={date} onChange={e => setDate(e.target.value)} />
-            </div>
-
-            <button className="cta-btn" onClick={fetchBriefing} disabled={loading || !resort}>
-              {loading
-                ? <><i className="ti ti-loader-2 spin" style={{ fontSize: 14 }} />Loading…</>
-                : <><i className="ti ti-refresh" style={{ fontSize: 14 }} />Get briefing</>}
-            </button>
-          </div>
-
-          {resort && <OpenSnowPanel resort={resort} />}
-          {resort && <TrafficPanel resort={resort} />}
-
-          {resort && !notifGranted && (
-            <div className="notif-bar">
-              <i className="ti ti-bell" style={{ fontSize: 14 }} />
-              <span>Get a 6:30 AM reminder on your ski day</span>
-              <button className="notif-bar-btn" onClick={requestNotifications}>Enable</button>
-            </div>
-          )}
-          {resort && notifGranted && reminderSet && (
-            <div className="notif-bar confirmed">
-              <i className="ti ti-bell-check" style={{ fontSize: 14 }} />
-              <span>Reminder set for {new Date(date + 'T06:30:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} at 6:30 AM</span>
-            </div>
-          )}
-
-          {resort && (
-            <div className="quick-links">
-              {resort.opensnow && <QuickLink href={`https://opensnow.com/dailysnow/${resort.opensnow}`} icon="ti-snowflake" label="OpenSnow daily forecast" variant="cyan" />}
-              {resort.unofficialAlpine && <QuickLink href="https://unofficialalpine.com/" icon="ti-pencil" label="Unofficial Alpine" variant="green" />}
-              {resort.parking && <QuickLink href="https://www.parkpalisadestahoe.com/mapnpark" icon="ti-parking" label="Map N Park" variant="cyan" />}
-              {isTahoe && <QuickLink href="https://member.everbridge.net/453003085611269/login" icon="ti-shield-check" label="Placer County alerts" variant="orange" />}
-              <QuickLink href={resort.url} icon="ti-mountain" label="Mountain report" variant="amber" />
-            </div>
-          )}
-
-          {isTahoe && (
-            <div className="tahoe-notice">
-              <i className="ti ti-alert-triangle" style={{ fontSize: 14, flexShrink: 0, marginTop: 1 }} />
-              <span>
-                Tahoe resort — briefing includes Placer County Sheriff alerts, Caltrans I-80/SR-89 chain control, Reserve N Ski parking status, and Mountaineer wait estimate.
-                For live push alerts, <a href="https://member.everbridge.net/453003085611269/login" target="_blank" rel="noopener noreferrer">log in to Everbridge ↗</a>
-              </span>
-            </div>
-          )}
-
-          {error && (
-            <div className="error-bar">
-              <i className="ti ti-alert-circle" style={{ fontSize: 14 }} />
-              {error}. Make sure you're connected and try again.
-            </div>
-          )}
-
-          {result && (
-            <div className="result-header appear">
-              <div className="result-pill">
-                <i className="ti ti-check" style={{ fontSize: 11 }} />
-                Live briefing · {resort && resort.name} · {dateLabel}
-              </div>
-            </div>
-          )}
-
-          {(loading || result) && (
-            <div className="cards appear">
-              {SECTIONS.map(s => (
-                <SectionCard key={s} section={s} content={result && result[s]} loading={loading && !result} resort={resort} />
-              ))}
-            </div>
-          )}
-
-          {!loading && !result && !error && (
-            <div className="empty">
-              <i className="ti ti-mountain empty-icon" />
-              <div className="empty-text">
-                Search for an Ikon Pass resort above,<br />set your departure city and date, then hit Get Briefing.
-              </div>
-            </div>
-          )}
-        </>
-      )}
-
-      {activeTab === 'party' && <PartyTab resort={resort} />}
-
-      <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} hasParty={hasPartyInUrl} />
-
+      {activeTab === 'briefing' && <BriefingTab profile={profile} showToast={showToast} />}
+      {activeTab === 'crew'     && <CrewTab profile={profile} showToast={showToast} />}
+      {activeTab === 'profile'  && <ProfileTab profile={profile} setProfile={setProfile} showToast={showToast} />}
+      <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
       {toast && (
         <div className="toast">
-          <i className="ti ti-check" style={{ fontSize: 13, color: '#A8FF78' }} />
+          <i className="ti ti-check" style={{fontSize:13, color:'#A8FF78'}} />
           {toast}
         </div>
       )}

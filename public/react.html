@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SkiBrief — What's your plan?</title>
+<meta name="theme-color" content="#0a0e14" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { min-height: 100vh; background: #0a0e14; font-family: 'Barlow', sans-serif; color: #e8edf2; }
+
+  .page { max-width: 480px; margin: 0 auto; padding: 48px 28px 40px; }
+
+  .app-eyebrow { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #00BFFF; margin-bottom: 24px; display: flex; align-items: center; gap: 8px; }
+  .eyebrow-dot { width: 6px; height: 6px; background: #00BFFF; border-radius: 50%; }
+
+  .question { font-family: 'Barlow Condensed', sans-serif; font-size: 38px; font-weight: 800; text-transform: uppercase; color: #fff; line-height: 1.05; margin-bottom: 6px; }
+  .sub { font-size: 14px; color: rgba(255,255,255,0.45); margin-bottom: 36px; line-height: 1.5; }
+
+  .activities { display: flex; flex-direction: column; gap: 10px; margin-bottom: 36px; }
+  .activity-btn {
+    display: flex; align-items: center; gap: 16px;
+    background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,255,255,0.1);
+    border-radius: 12px; padding: 18px 20px; cursor: pointer;
+    transition: all 0.18s; text-align: left; width: 100%;
+    font-family: 'Barlow', sans-serif;
+  }
+  .activity-btn:hover { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.2); }
+  .activity-btn.selected { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); }
+  .activity-emoji { font-size: 28px; width: 36px; text-align: center; flex-shrink: 0; }
+  .activity-text { flex: 1; }
+  .activity-label { font-size: 16px; font-weight: 600; color: #e8edf2; line-height: 1.2; }
+  .activity-sub { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+  .activity-check { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
+  .activity-btn.selected .activity-check { background: var(--accent); border-color: var(--accent); color: #0a0e14; font-size: 13px; font-weight: 700; }
+
+  .submit-btn {
+    width: 100%; padding: 15px; background: #00BFFF; border: none; border-radius: 10px;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; color: #0a0e14;
+    cursor: pointer; transition: background 0.18s;
+  }
+  .submit-btn:hover:not(:disabled) { background: #33CCFF; }
+  .submit-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* Confirmation state */
+  .confirm-header { text-align: center; margin-bottom: 32px; }
+  .confirm-emoji { font-size: 60px; display: block; margin-bottom: 16px; }
+  .confirm-title { font-family: 'Barlow Condensed', sans-serif; font-size: 32px; font-weight: 800; text-transform: uppercase; color: #fff; margin-bottom: 6px; }
+  .confirm-sub { font-size: 14px; color: rgba(255,255,255,0.45); }
+
+  .crew-card { background: #111620; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); overflow: hidden; margin-top: 24px; }
+  .crew-card-header { padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .crew-card-title { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.45); }
+  .crew-card-name { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 800; color: #fff; margin-top: 2px; }
+  .member-row { display: flex; align-items: center; gap: 12px; padding: 11px 18px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .member-row:last-child { border-bottom: none; }
+  .member-emoji { font-size: 20px; width: 28px; text-align: center; }
+  .member-name { flex: 1; font-size: 14px; font-weight: 500; color: #e8edf2; }
+  .member-activity { font-size: 12px; color: rgba(255,255,255,0.4); }
+  .member-you { font-size: 9px; background: rgba(0,191,255,0.15); color: #00BFFF; border-radius: 3px; padding: 1px 5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-left: 4px; }
+  .member-pending { color: rgba(255,255,255,0.2); font-style: italic; }
+
+  .open-app-btn {
+    display: block; text-align: center; margin-top: 16px;
+    padding: 13px; background: transparent; border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px; color: rgba(255,255,255,0.5); font-size: 13px;
+    text-decoration: none; transition: all 0.15s;
+  }
+  .open-app-btn:hover { border-color: rgba(255,255,255,0.25); color: #e8edf2; }
+
+  .spinner { display: flex; justify-content: center; align-items: center; min-height: 40vh; }
+  .spinner::after { content: ''; width: 32px; height: 32px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #00BFFF; border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .error-msg { background: rgba(255,80,80,0.1); border: 1px solid rgba(255,80,80,0.3); border-radius: 8px; padding: 14px 16px; font-size: 13px; color: #ff9090; margin-top: 16px; }
+</style>
+</head>
+<body>
+<div class="page" id="app">
+  <div class="spinner"></div>
+</div>
+
+<script>
+const ACTIVITIES = [
+  { id: 'skiing', emoji: '⛷️', label: 'Skiing / snowboarding', sub: "I'm hitting the mountain",  accent: '#00BFFF' },
+  { id: 'lake',   emoji: '⛵', label: 'Lake / boating',        sub: "I'm on the water",          accent: '#38BDF8' },
+  { id: 'golf',   emoji: '⛳', label: 'Golf',                  sub: "I'm on the course",          accent: '#A8FF78' },
+  { id: 'home',   emoji: '🏡', label: 'Home day',              sub: "Not going out",              accent: '#94A3B8' },
+];
+
+const params  = new URLSearchParams(location.search);
+const token   = params.get('t');
+const preActivity = params.get('a');
+
+let selected  = preActivity || null;
+let state     = 'loading';   // 'loading' | 'choose' | 'confirmed' | 'error'
+let crewData  = null;
+let errMsg    = '';
+
+function fmt(iso) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+}
+
+function activityLabel(id) {
+  return ACTIVITIES.find(a => a.id === id)?.label || 'No response';
+}
+function activityEmoji(id) {
+  return ACTIVITIES.find(a => a.id === id)?.emoji || '·';
+}
+
+function render() {
+  const app = document.getElementById('app');
+  if (state === 'loading') {
+    app.innerHTML = '<div class="spinner"></div>';
+    return;
+  }
+  if (state === 'error') {
+    app.innerHTML = `
+      <div class="app-eyebrow"><div class="eyebrow-dot"></div>SkiBrief</div>
+      <div class="question">Oops</div>
+      <div class="error-msg">${errMsg}</div>`;
+    return;
+  }
+  if (state === 'confirmed' && crewData) {
+    const act = ACTIVITIES.find(a => a.id === crewData.activity) || ACTIVITIES[3];
+    const dateStr = crewData.date
+      ? new Date(crewData.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })
+      : '';
+    const sorted = [...(crewData.crew_status || [])].sort((a, b) => {
+      if (a.activity && !b.activity) return -1;
+      if (!a.activity && b.activity) return 1;
+      return 0;
+    });
+    app.innerHTML = `
+      <div class="app-eyebrow"><div class="eyebrow-dot"></div>SkiBrief</div>
+      <div class="confirm-header">
+        <span class="confirm-emoji">${act.emoji}</span>
+        <div class="confirm-title">${act.label}</div>
+        <div class="confirm-sub">${crewData.my_name ? `${crewData.my_name} · ` : ''}${dateStr}</div>
+      </div>
+      ${crewData.crew_name ? `
+      <div class="crew-card">
+        <div class="crew-card-header">
+          <div class="crew-card-title">Crew status</div>
+          <div class="crew-card-name">${crewData.crew_name}</div>
+        </div>
+        ${sorted.map(m => `
+          <div class="member-row">
+            <div class="member-emoji">${m.activity ? activityEmoji(m.activity) : '·'}</div>
+            <div class="member-name">
+              ${m.name || 'Unknown'}
+              ${m.name === crewData.my_name ? '<span class="member-you">you</span>' : ''}
+            </div>
+            <div class="member-activity ${!m.activity ? 'member-pending' : ''}">
+              ${m.activity ? activityLabel(m.activity) : 'No response yet'}
+            </div>
+          </div>
+        `).join('')}
+      </div>` : ''}
+      <a href="/" class="open-app-btn">Open SkiBrief app ↗</a>`;
+    return;
+  }
+  // Choose state
+  const dateStr = crewData?.date
+    ? new Date(crewData.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })
+    : 'today';
+  app.innerHTML = `
+    <div class="app-eyebrow"><div class="eyebrow-dot"></div>SkiBrief ${crewData?.crew_name ? '· ' + crewData.crew_name : ''}</div>
+    <div class="question">What's your plan?</div>
+    <div class="sub">${dateStr}</div>
+    <div class="activities">
+      ${ACTIVITIES.map(a => `
+        <button class="activity-btn${selected === a.id ? ' selected' : ''}" style="--accent:${a.accent}" data-id="${a.id}">
+          <div class="activity-emoji">${a.emoji}</div>
+          <div class="activity-text">
+            <div class="activity-label">${a.label}</div>
+            <div class="activity-sub">${a.sub}</div>
+          </div>
+          <div class="activity-check">${selected === a.id ? '✓' : ''}</div>
+        </button>`).join('')}
+    </div>
+    <button class="submit-btn" id="submit-btn" ${!selected ? 'disabled' : ''}>
+      ${selected ? 'Submit — I\'m ' + activityLabel(selected) : 'Choose your plan above'}
+    </button>`;
+
+  document.querySelectorAll('.activity-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      selected = btn.dataset.id;
+      render();
+    });
+  });
+  document.getElementById('submit-btn')?.addEventListener('click', submitReaction);
+}
+
+async function loadState() {
+  if (!token) {
+    state = 'error';
+    errMsg = 'No reaction token in URL. Please use the link from your SMS.';
+    render();
+    return;
+  }
+  try {
+    const r = await fetch(`/api/react?t=${token}`);
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'Failed to load');
+    crewData = data;
+
+    // If already responded and no pre-activity, show confirmed
+    if (data.my_activity && !preActivity) {
+      crewData.activity = data.my_activity;
+      state = 'confirmed';
+    } else if (preActivity) {
+      // Pre-filled from SMS link — submit immediately
+      await submitReaction(null, preActivity);
+      return;
+    } else {
+      state = 'choose';
+    }
+  } catch (e) {
+    state = 'error';
+    errMsg = e.message;
+  }
+  render();
+}
+
+async function submitReaction(e, forceActivity) {
+  const act = forceActivity || selected;
+  if (!act) return;
+  state = 'loading';
+  render();
+  try {
+    const r = await fetch('/api/react', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, activity: act }),
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'Failed to submit');
+    crewData = { ...data, activity: act };
+    state = 'confirmed';
+  } catch (e) {
+    state = 'error';
+    errMsg = e.message;
+  }
+  render();
+}
+
+loadState();
+</script>
+</body>
+</html>
