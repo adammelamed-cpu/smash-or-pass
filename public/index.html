@@ -911,13 +911,17 @@ function BriefingTab({ profile, showToast }) {
 /* ════════════════════════════════════════════════════════
    CREW TAB
 ════════════════════════════════════════════════════════ */
-function CrewTab({ profile, showToast }) {
+function CrewTab({ profile, setProfile, showToast }) {
   const [crewData, setCrewData] = useState(null);
   const [loadingCrew, setLoadingCrew] = useState(false);
   const [sendingCheckin, setSendingCheckin] = useState(false);
   const [checkinDate, setCheckinDate] = useState(tomorrowStr());
   const [myPlan, setMyPlan] = useState(null);
   const [loggingPlan, setLoggingPlan] = useState(false);
+  const [crewNameInput, setCrewNameInput] = useState('');
+  const [crewCodeInput, setCrewCodeInput] = useState('');
+  const [creatingCrew, setCreatingCrew] = useState(false);
+  const [joiningCrew, setJoiningCrew] = useState(false);
 
   const crew = profile?.crew;
 
@@ -980,6 +984,40 @@ function CrewTab({ profile, showToast }) {
     setLoggingPlan(false);
   }
 
+  async function createCrewInline() {
+    if (!crewNameInput.trim()) return;
+    if (!profile?.id) { showToast('Profile not synced to server yet — check Supabase setup'); return; }
+    setCreatingCrew(true);
+    try {
+      const r = await fetch('/api/crew', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ name: crewNameInput.trim(), profile_id: profile.id }) });
+      const data = await r.json();
+      if (r.ok) {
+        const updated = { ...profile, crew: data };
+        saveProfile(updated); setProfile(updated);
+        showToast(`✅ ${data.name} created! Code: ${data.invite_code}`);
+        setCrewNameInput('');
+      } else { showToast(`Error: ${data.error}`); }
+    } catch { showToast('Failed to create crew'); }
+    setCreatingCrew(false);
+  }
+
+  async function joinCrewInline() {
+    if (!crewCodeInput.trim()) return;
+    if (!profile?.id) { showToast('Profile not synced to server yet — check Supabase setup'); return; }
+    setJoiningCrew(true);
+    try {
+      const r = await fetch('/api/crew', { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ invite_code: crewCodeInput.trim(), profile_id: profile.id }) });
+      const data = await r.json();
+      if (r.ok) {
+        const updated = { ...profile, crew: data };
+        saveProfile(updated); setProfile(updated);
+        showToast(`👥 Joined ${data.name}!`);
+        setCrewCodeInput('');
+      } else { showToast(`Error: ${data.error}`); }
+    } catch { showToast('Failed to join crew'); }
+    setJoiningCrew(false);
+  }
+
   async function copyInvite() {
     const code = crewData?.crew?.invite_code || crew?.invite_code;
     if (!code) return;
@@ -1001,15 +1039,32 @@ function CrewTab({ profile, showToast }) {
   if (!crew) {
     return (
       <div className="crew-root">
-        <div className="crew-empty-state">
-          <span className="crew-empty-icon">👥</span>
-          <div className="crew-empty-title">No crew yet</div>
-          <div className="crew-empty-sub">Create a crew or join one with an invite code. Your whole group will get SMS check-ins and see each other's plans.</div>
-          <button className="crew-setup-btn" onClick={() => {}}>
-            <i className="ti ti-users-plus" style={{fontSize:15}} /> Set up a crew
-          </button>
-          <div style={{marginTop:8, fontSize:12, color:'rgba(255,255,255,0.2)'}}>
-            (Go to Profile tab → Crew to get started)
+        <div className="crew-page-header">
+          <div className="crew-page-eyebrow">Your crew</div>
+          <div className="crew-page-title">Set Up a Crew</div>
+        </div>
+        <div className="crew-section">
+          <div className="crew-section-label">Create a crew</div>
+          <div style={{display:'flex', gap:8}}>
+            <div className="field-group" style={{flex:1}}>
+              <span className="field-label">Crew name</span>
+              <input className="field-input" value={crewNameInput} onChange={e => setCrewNameInput(e.target.value)} placeholder="e.g. Tahoe Crew" autoCapitalize="words" />
+            </div>
+            <button className="cta-btn" style={{alignSelf:'flex-end', padding:'9px 14px', fontSize:12}} onClick={createCrewInline} disabled={creatingCrew || !crewNameInput.trim()}>
+              {creatingCrew ? <i className="ti ti-loader-2 spin" style={{fontSize:13}} /> : 'Create'}
+            </button>
+          </div>
+        </div>
+        <div className="crew-section">
+          <div className="crew-section-label">Join a crew</div>
+          <div style={{display:'flex', gap:8}}>
+            <div className="field-group" style={{flex:1}}>
+              <span className="field-label">Invite code</span>
+              <input className="field-input crew-code-input" value={crewCodeInput} onChange={e => setCrewCodeInput(e.target.value.toUpperCase().slice(0,6))} placeholder="ABC123" maxLength={6} />
+            </div>
+            <button className="cta-btn" style={{alignSelf:'flex-end', padding:'9px 14px', fontSize:12}} onClick={joinCrewInline} disabled={joiningCrew || crewCodeInput.length < 4}>
+              {joiningCrew ? <i className="ti ti-loader-2 spin" style={{fontSize:13}} /> : 'Join'}
+            </button>
           </div>
         </div>
       </div>
@@ -1045,40 +1100,43 @@ function CrewTab({ profile, showToast }) {
         <div className="crew-page-title">{crewName}</div>
       </div>
 
-      {checkIn && (
-        <div className="crew-section">
-          <div className="date-strip">
-            <div className="date-strip-line" />
-            <span>{dateLabel(checkIn)}</span>
-            <div className="date-strip-line" />
-          </div>
-          <div className="crew-member-list">
-            {memberStatus.length === 0 ? (
-              <div style={{color:'rgba(255,255,255,0.3)', fontSize:13, padding:'8px 0'}}>No responses yet.</div>
-            ) : (
-              memberStatus.map((m, i) => {
-                const act = m.activity ? ACTIVITIES[m.activity] : null;
-                const isMe = m.profile_id === profile?.id;
-                return (
-                  <div key={i} className="crew-member-row">
-                    <div className="crew-member-emoji">{act ? act.emoji : '·'}</div>
-                    <div className="crew-member-info">
-                      <div className="crew-member-name">
-                        {m.name}
-                        {isMe && <span className="you-badge">you</span>}
-                      </div>
-                      <div className={`crew-member-activity${act ? ' ' + act.color : ' pending-dot'}`}>
-                        {act ? act.label : 'No response yet'}
-                      </div>
-                    </div>
-                    {m.reacted_at && <div className="crew-member-time">{formatTime(m.reacted_at)}</div>}
-                  </div>
-                );
-              })
-            )}
-          </div>
+      <div className="crew-section">
+        <div className="crew-section-label">
+          {checkIn ? `Plans · ${dateLabel(checkIn)}` : `Members · ${members.length}`}
         </div>
-      )}
+        {!checkIn && members.length > 0 && (
+          <div style={{fontSize:12, color:'rgba(255,255,255,0.3)', marginBottom:10, fontStyle:'italic'}}>
+            Send a check-in below to collect plans
+          </div>
+        )}
+        <div className="crew-member-list">
+          {members.length === 0 ? (
+            <div style={{color:'rgba(255,255,255,0.3)', fontSize:13, padding:'12px 14px', background:'#111620', borderRadius:8}}>
+              No members yet — share the invite code below
+            </div>
+          ) : (
+            memberStatus.map((m, i) => {
+              const act = m.activity ? ACTIVITIES[m.activity] : null;
+              const isMe = m.profile_id === profile?.id;
+              return (
+                <div key={i} className="crew-member-row">
+                  <div className="crew-member-emoji">{act ? act.emoji : (checkIn ? '·' : '👤')}</div>
+                  <div className="crew-member-info">
+                    <div className="crew-member-name">
+                      {m.name}
+                      {isMe && <span className="you-badge">you</span>}
+                    </div>
+                    <div className={`crew-member-activity${act ? ' ' + act.color : (checkIn ? ' pending-dot' : '')}`}>
+                      {checkIn ? (act ? act.label : 'No response yet') : 'In the crew'}
+                    </div>
+                  </div>
+                  {m.reacted_at && <div className="crew-member-time">{formatTime(m.reacted_at)}</div>}
+                </div>
+              );
+            })
+          )}
+        </div>
+      </div>
 
       {checkIn && (
         <div className="crew-section">
@@ -1392,7 +1450,7 @@ function App() {
   return (
     <div className="ski-root">
       {activeTab === 'briefing' && <BriefingTab profile={profile} showToast={showToast} />}
-      {activeTab === 'crew'     && <CrewTab profile={profile} showToast={showToast} />}
+      {activeTab === 'crew'     && <CrewTab profile={profile} setProfile={setProfile} showToast={showToast} />}
       {activeTab === 'profile'  && <ProfileTab profile={profile} setProfile={setProfile} showToast={showToast} />}
       <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
       {toast && (
