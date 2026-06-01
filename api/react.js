@@ -58,9 +58,16 @@ export default async function handler(req, res) {
 
   // POST /api/react  — submit or update a reaction
   if (req.method === 'POST') {
-    const { token, activity, note } = req.body;
-    if (!token || !activity) return res.status(400).json({ error: 'token and activity required' });
+    let { token, activity, note, profile_id, check_in_id } = req.body;
+    if (!activity) return res.status(400).json({ error: 'activity required' });
     if (!ACTIVITY_META[activity]) return res.status(400).json({ error: 'Invalid activity' });
+
+    // Allow lookup by profile_id + check_in_id (in-app logging without an SMS token)
+    if (!token && profile_id && check_in_id) {
+      const { data: rxn } = await db.from('reactions').select('reaction_token').eq('profile_id', profile_id).eq('check_in_id', check_in_id).single();
+      if (rxn) token = rxn.reaction_token;
+    }
+    if (!token) return res.status(400).json({ error: 'token or profile_id+check_in_id required' });
 
     const { data: reaction, error: findErr } = await db
       .from('reactions')

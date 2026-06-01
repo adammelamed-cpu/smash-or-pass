@@ -103,6 +103,20 @@ export default async function handler(req, res) {
     return res.status(200).json(crew);
   }
 
+  // PUT /api/crew  — rename a crew (creator only)
+  if (req.method === 'PUT') {
+    const { id, name, profile_id } = req.body;
+    if (!id || !name || !profile_id) return res.status(400).json({ error: 'id, name, and profile_id required' });
+
+    const { data: existing, error: findErr } = await db.from('crews').select('created_by').eq('id', id).single();
+    if (findErr) return res.status(404).json({ error: 'Crew not found' });
+    if (existing.created_by !== profile_id) return res.status(403).json({ error: 'Only the crew creator can rename' });
+
+    const { data, error } = await db.from('crews').update({ name }).eq('id', id).select().single();
+    if (error) return res.status(500).json({ error: error.message });
+    return res.status(200).json(data);
+  }
+
   // DELETE /api/crew  — leave a crew
   if (req.method === 'DELETE') {
     const { crew_id, profile_id } = req.body;
