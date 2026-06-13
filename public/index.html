@@ -1,1 +1,621 @@
-placeholder_html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>SmashOrPass.app 💘</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Nunito',system-ui,sans-serif;overflow:hidden;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(160deg,#0f0020 0%,#2d0054 50%,#0f0020 100%)}
+
+/* ── layout ── */
+#app{max-width:430px;margin:0 auto;height:100dvh;height:100vh;display:flex;flex-direction:column;padding:0 16px 12px;position:relative}
+
+/* ── header ── */
+.hdr{padding:16px 0 8px;text-align:center;flex-shrink:0;position:relative}
+.hdr-logo{font-size:28px;font-weight:900;background:linear-gradient(90deg,#ff4b8b 0%,#ff8a5a 60%,#ff4b8b 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.5px}
+.hdr-sub{font-size:11px;color:rgba(255,255,255,.32);letter-spacing:.18em;text-transform:uppercase;margin-top:2px}
+.add-btn{position:absolute;right:0;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,75,139,.15);border:1.5px solid rgba(255,75,139,.45);color:#ff4b8b;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;padding-bottom:1px}
+.add-btn:hover{background:rgba(255,75,139,.3)}
+
+/* ── progress dots ── */
+.progress{display:flex;justify-content:center;gap:6px;margin-bottom:8px;flex-shrink:0;height:16px;align-items:center}
+.pdot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.14);transition:all .3s}
+.pdot.done{background:rgba(255,75,139,.4)}
+.pdot.active{background:#ff4b8b;width:9px;height:9px}
+
+/* ── card stack ── */
+.card-area{flex:1;position:relative;display:flex;align-items:center;justify-content:center}
+.card{position:absolute;width:100%;max-width:360px;height:100%;max-height:510px;border-radius:22px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.55);background:#1a1a2e}
+.card-front{z-index:2;cursor:grab;touch-action:none}
+.card-front.grabbing{cursor:grabbing}
+.card-back{z-index:1;transform:scale(.94) translateY(9px);transition:transform .35s ease;pointer-events:none}
+.card-back.up{transform:scale(1) translateY(0)}
+
+/* ── photo gallery inside card ── */
+.photo-wrap{position:relative;width:100%;height:100%;overflow:hidden}
+.photo-wrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;pointer-events:none;display:block;transition:opacity .25s ease}
+.photo-wrap img.hidden{opacity:0}
+.photo-dots{position:absolute;top:10px;left:0;right:0;display:flex;justify-content:center;gap:5px;z-index:5;pointer-events:none}
+.photo-dot{height:3px;border-radius:3px;background:rgba(255,255,255,.4);flex:1;max-width:40px;transition:background .2s}
+.photo-dot.active{background:#fff}
+.tap-left,.tap-right{position:absolute;top:0;bottom:80px;width:40%;z-index:4}
+.tap-left{left:0}
+.tap-right{right:0}
+.card-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:90px}
+
+/* ── card info ── */
+.card-info{position:absolute;bottom:0;left:0;right:0;padding:70px 20px 22px;background:linear-gradient(to top,rgba(0,0,0,.9) 0%,rgba(0,0,0,.52) 55%,transparent 100%);color:#fff;z-index:3}
+.card-name-row{display:flex;align-items:baseline;gap:8px;margin-bottom:4px}
+.card-name{font-size:30px;font-weight:900;line-height:1}
+.card-age{font-size:22px;font-weight:600;opacity:.8}
+.card-dist{font-size:12px;color:rgba(255,255,255,.6);margin-bottom:8px}
+.card-bio{font-size:13px;line-height:1.55;color:rgba(255,255,255,.82);margin-bottom:10px}
+.card-tags{display:flex;flex-wrap:wrap;gap:5px}
+.ctag{background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.24);border-radius:50px;padding:3px 11px;font-size:11px;font-weight:700;color:rgba(255,255,255,.85)}
+
+/* ── swipe stamps ── */
+.stamp{position:absolute;top:30px;padding:7px 16px;border-radius:8px;font-size:36px;font-weight:900;letter-spacing:3px;opacity:0;pointer-events:none;border:4px solid;z-index:6}
+.stamp-smash{right:16px;color:#00e676;border-color:#00e676;transform:rotate(20deg)}
+.stamp-pass{left:16px;color:#ff1744;border-color:#ff1744;transform:rotate(-20deg)}
+
+/* ── action buttons ── */
+.actions{display:flex;align-items:center;justify-content:center;gap:26px;padding:14px 0 6px;flex-shrink:0}
+.btn-action{border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .12s,box-shadow .12s;line-height:1;font-family:inherit}
+.btn-action:active{transform:scale(.88)!important}
+.btn-pass{width:62px;height:62px;background:#fff;color:#ff1744;font-size:26px;box-shadow:0 4px 18px rgba(255,23,68,.25)}
+.btn-pass:hover{transform:scale(1.07);box-shadow:0 6px 24px rgba(255,23,68,.42)}
+.btn-smash{width:74px;height:74px;background:linear-gradient(135deg,#ff4b8b,#ff7a5a);color:#fff;font-size:34px;box-shadow:0 6px 24px rgba(255,75,139,.48)}
+.btn-smash:hover{transform:scale(1.07);box-shadow:0 8px 32px rgba(255,75,139,.62)}
+
+/* ── smash celebration ── */
+#smashScreen{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:500;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
+#smashScreen.vis{display:flex}
+.smash-title{font-size:52px;font-weight:900;color:#ff4b8b;margin-bottom:6px;animation:popin .45s cubic-bezier(.17,.67,.35,1.4) both}
+@keyframes popin{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+.smash-sub{font-size:16px;color:rgba(255,255,255,.7);margin-bottom:28px}
+.smash-photos{display:flex;align-items:center;gap:18px;margin-bottom:30px}
+.smash-you{width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;font-size:52px;border:3px solid #ff4b8b}
+.smash-them{width:110px;height:110px;border-radius:50%;object-fit:cover;border:3px solid #ff4b8b}
+.smash-heart{font-size:34px;animation:pulse .7s ease infinite alternate}
+@keyframes pulse{from{transform:scale(1)}to{transform:scale(1.35)}}
+.btn-keep{background:linear-gradient(135deg,#ff4b8b,#ff7a5a);color:#fff;border:none;border-radius:50px;padding:15px 42px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;transition:transform .15s}
+.btn-keep:hover{transform:scale(1.05)}
+
+/* ── results ── */
+#resultsScreen{display:none;position:fixed;inset:0;background:linear-gradient(160deg,#0f0020,#2d0054);z-index:400;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px}
+#resultsScreen.vis{display:flex}
+.res-title{font-size:40px;font-weight:900;background:linear-gradient(90deg,#ff4b8b,#ff8a5a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px}
+.res-sub{font-size:14px;color:rgba(255,255,255,.4);margin-bottom:38px}
+.res-stats{display:flex;gap:44px;margin-bottom:32px}
+.stat{text-align:center}
+.stat-n{font-size:58px;font-weight:900;line-height:1}
+.stat-n.s{color:#00e676}
+.stat-n.p{color:#ff1744}
+.stat-l{font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.14em;text-transform:uppercase;margin-top:5px}
+.res-verdict{font-size:15px;color:rgba(255,255,255,.72);line-height:1.65;max-width:290px;margin-bottom:36px}
+.btn-restart{background:linear-gradient(135deg,#ff4b8b,#ff7a5a);color:#fff;border:none;border-radius:50px;padding:16px 44px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;transition:transform .15s}
+.btn-restart:hover{transform:scale(1.05)}
+
+/* ── add friend modal ── */
+#addModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:600;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
+#addModal.vis{display:flex}
+.modal-inner{background:#150029;border-radius:28px 28px 0 0;width:100%;max-width:430px;padding:24px 20px 36px;max-height:92vh;overflow-y:auto}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.modal-head-title{font-size:20px;font-weight:900;color:#fff}
+.modal-close{background:rgba(255,255,255,.1);border:none;border-radius:50%;width:34px;height:34px;color:rgba(255,255,255,.6);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.photo-pick{background:rgba(255,75,139,.07);border:2px dashed rgba(255,75,139,.35);border-radius:18px;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;margin-bottom:14px;transition:all .2s;color:rgba(255,255,255,.45);font-size:14px;gap:8px;overflow:hidden;position:relative}
+.photo-pick:hover{border-color:rgba(255,75,139,.65);background:rgba(255,75,139,.12)}
+.photo-pick img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:16px}
+.photo-pick-label{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none}
+.mfield{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.11);border-radius:14px;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;padding:12px 14px;width:100%;margin-bottom:10px;outline:none;resize:none}
+.mfield:focus{border-color:rgba(255,75,139,.55);background:rgba(255,255,255,.09)}
+.mfield::placeholder{color:rgba(255,255,255,.28)}
+.save-btn{background:linear-gradient(135deg,#ff4b8b,#ff7a5a);color:#fff;border:none;border-radius:50px;padding:15px;width:100%;font-size:16px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:4px;transition:transform .15s}
+.save-btn:hover{transform:scale(1.02)}
+.save-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.modal-hint{font-size:11px;color:rgba(255,255,255,.28);text-align:center;margin-top:10px}
+
+/* ── toast ── */
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(255,75,139,.95);color:#fff;padding:10px 22px;border-radius:50px;font-size:14px;font-weight:700;opacity:0;pointer-events:none;z-index:700;transition:all .3s;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── confetti ── */
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:450}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="hdr">
+    <div class="hdr-logo">Smash or Pass</div>
+    <div class="hdr-sub">❄️ Friend Edition ❄️</div>
+    <button class="add-btn" onclick="openAddModal()" title="Add a friend">+</button>
+  </div>
+  <div class="progress" id="progress"></div>
+  <div class="card-area" id="cardArea"></div>
+  <div class="actions" id="actions">
+    <button class="btn-action btn-pass" id="passBtn">✕</button>
+    <button class="btn-action btn-smash" id="smashBtn">♥</button>
+  </div>
+</div>
+
+<!-- Smash celebration -->
+<div id="smashScreen">
+  <div class="smash-title">IT'S A SMASH! 🔥</div>
+  <div class="smash-sub">You and <strong id="smashName"></strong> have a lot in common, apparently 💕</div>
+  <div class="smash-photos">
+    <div class="smash-you">😎</div>
+    <div class="smash-heart">💥</div>
+    <img class="smash-them" id="smashPhoto" src="" alt="">
+  </div>
+  <button class="btn-keep" onclick="dismissSmash()">Keep Judging →</button>
+</div>
+
+<!-- Results -->
+<div id="resultsScreen">
+  <div style="font-size:54px;margin-bottom:14px">🏆</div>
+  <div class="res-title">Verdict's In.</div>
+  <div class="res-sub">Your friends have been thoroughly judged.</div>
+  <div class="res-stats">
+    <div class="stat"><div class="stat-n s" id="smashCount">0</div><div class="stat-l">Smashed</div></div>
+    <div class="stat"><div class="stat-n p" id="passCount">0</div><div class="stat-l">Passed</div></div>
+  </div>
+  <div class="res-verdict" id="verdict"></div>
+  <button class="btn-restart" onclick="restart()">Play Again 🔄</button>
+</div>
+
+<!-- Add Friend Modal -->
+<div id="addModal" onclick="e => { if(e.target===this) closeAddModal(); }">
+  <div class="modal-inner">
+    <div class="modal-head">
+      <span class="modal-head-title">Add a Friend 🃏</span>
+      <button class="modal-close" onclick="closeAddModal()">✕</button>
+    </div>
+    <div class="photo-pick" id="photoPick" onclick="document.getElementById('photoFile').click()">
+      <div class="photo-pick-label">
+        <span style="font-size:32px">📸</span>
+        <span>Tap to add photo</span>
+        <span style="font-size:11px;color:rgba(255,255,255,.25)">Required</span>
+      </div>
+      <input type="file" id="photoFile" accept="image/*" style="display:none">
+    </div>
+    <input class="mfield" type="text" id="addName" placeholder="Name *" maxlength="30">
+    <input class="mfield" type="number" id="addAge" placeholder="Age" min="1" max="99">
+    <textarea class="mfield" id="addBio" placeholder="Satirical bio... (roast them)" rows="3" maxlength="200"></textarea>
+    <input class="mfield" type="text" id="addTags" placeholder="Tags: comma, separated, vibes">
+    <button class="save-btn" id="saveBtn" onclick="saveFriend()">Add to Deck 🃏</button>
+    <div class="modal-hint">Saved locally in this browser • Photo is resized automatically</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<canvas id="confetti"></canvas>
+
+<script>
+// ============================================================
+// BASE FRIENDS — hardcoded profiles (always shown first)
+// ============================================================
+const FRIENDS = [
+  {
+    name: "Alexandra",
+    age: 28,
+    photos: ["friend1b.webp", "friend1.png", "friend1c.webp"],
+    distance: "2 miles away",
+    bio: "Newly on Tinder and READY. Self-described \"free spirit\" who recently discovered Cuban cigars and won't shut up about them. Has a lot of opinions on size, length, and the importance of a good draw. Just talking about cigars, obviously.",
+    tags: ["Recently Unleashed", "Cigar Aficionado 🍬", "Horse Girl", "Large Object Enthusiast"],
+  },
+  {
+    name: "Brycee",
+    age: 27,
+    photos: ["friend2.webp"],
+    distance: "1 mile away",
+    bio: "Technically taken but somehow still on here. His boyfriend would be furious — or maybe he already knows. Either way, Brycee says they're \"very open-minded.\" Will talk about his relationship the entire date.",
+    tags: ["Complicated 💅", "Brings His BF Anyway", "Emotionally Unavailable", "Great Listener Tho"],
+  },
+  {
+    name: "Adam",
+    age: 29,
+    photos: ["friend3a.webp", "friend3b.webp"],
+    distance: "0 miles away",
+    bio: "Built this app and then put himself on it. The audacity is genuinely impressive. Expresses all emotions through bear hugs. Will pick you up without warning. Somehow knows everyone in every bar.",
+    tags: ["Built This App 🤓", "Hugger Warning", "Knows a Guy", "0 Personal Boundaries"],
+  },
+  {
+    name: "Everett",
+    age: 25,
+    photos: ["friend4a.webp", "friend4b.webp"],
+    distance: "3 miles away",
+    bio: "Permanently mid-story at a bar, pointing at someone across the room like he's about to reveal the plot twist of the century. Has approximately 400 best friends. Ordered a beer 45 minutes ago and has not touched it.",
+    tags: ["Always Mid-Story", "Pint Pointer 🍺", "Chaos Energy", "Best Friend to Everyone"],
+  },
+];
+
+// ============================================================
+// LOCALSTORAGE — custom friends added via the form
+// ============================================================
+function loadCustom() {
+  try { return JSON.parse(localStorage.getItem('smash-custom') || '[]'); } catch { return []; }
+}
+function saveCustom(arr) { localStorage.setItem('smash-custom', JSON.stringify(arr)); }
+function getAllFriends()  { return [...FRIENDS, ...loadCustom()]; }
+
+// ============================================================
+// STATE
+// ============================================================
+let ALL = [], idx = 0, smashes = 0, passes = 0;
+let dragging = false, startX = 0, startY = 0, deltaX = 0, deltaY = 0;
+let touchStartTime = 0;
+let frontCard = null, smashPending = false;
+
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  ALL = getAllFriends();
+  idx = 0; smashes = 0; passes = 0; smashPending = false;
+  document.getElementById('actions').style.visibility = 'visible';
+  renderProgress();
+  renderCards();
+}
+
+function renderProgress() {
+  document.getElementById('progress').innerHTML = ALL.map((_, i) => {
+    const cls = i < idx ? 'done' : i === idx ? 'active' : '';
+    return `<div class="pdot ${cls}"></div>`;
+  }).join('');
+}
+
+// ============================================================
+// CARD RENDERING
+// ============================================================
+function renderCards() {
+  const area = document.getElementById('cardArea');
+  area.querySelectorAll('.card').forEach(c => c.remove());
+  frontCard = null;
+  if (idx >= ALL.length) { showResults(); return; }
+
+  if (idx + 1 < ALL.length) {
+    const back = buildCard(ALL[idx + 1]);
+    back.classList.add('card-back');
+    area.appendChild(back);
+  }
+  const front = buildCard(ALL[idx]);
+  front.classList.add('card-front');
+  area.appendChild(front);
+  frontCard = front;
+  bindDrag(front);
+}
+
+function buildCard(f) {
+  const el = document.createElement('div');
+  el.className = 'card';
+  const photos = f.photos || (f.photo ? [f.photo] : []);
+  el._photoIdx = 0;
+
+  let mediaHTML = '';
+  if (photos.length > 0) {
+    const dots = photos.length > 1
+      ? `<div class="photo-dots">${photos.map((_, i) => `<div class="photo-dot${i === 0 ? ' active' : ''}"></div>`).join('')}</div>` : '';
+    const imgs = photos.map((src, i) =>
+      `<img src="${src}" alt="${f.name}" draggable="false" class="${i === 0 ? '' : 'hidden'}" onerror="this.style.display='none'">`
+    ).join('');
+    const tapZones = photos.length > 1
+      ? `<div class="tap-left" data-dir="-1"></div><div class="tap-right" data-dir="1"></div>` : '';
+    mediaHTML = `<div class="photo-wrap">${dots}${imgs}${tapZones}</div>`;
+  } else {
+    mediaHTML = `<div class="card-placeholder" style="background:${f.bg||'linear-gradient(135deg,#667eea,#764ba2)'}">${f.emoji||'🫠'}</div>`;
+  }
+
+  const tags = (f.tags||[]).map(t => `<span class="ctag">${t}</span>`).join('');
+  el.innerHTML = `
+    ${mediaHTML}
+    <div class="stamp stamp-smash">SMASH</div>
+    <div class="stamp stamp-pass">PASS</div>
+    <div class="card-info">
+      <div class="card-name-row"><span class="card-name">${f.name}</span><span class="card-age">${f.age||''}</span></div>
+      <div class="card-dist">📍 ${f.distance||'nearby'}</div>
+      <div class="card-bio">${f.bio||''}</div>
+      <div class="card-tags">${tags}</div>
+    </div>`;
+  return el;
+}
+
+function cyclePhoto(card, dir) {
+  const wrap = card.querySelector('.photo-wrap');
+  if (!wrap) return;
+  const imgs = wrap.querySelectorAll('img');
+  const dots = wrap.querySelectorAll('.photo-dot');
+  if (imgs.length <= 1) return;
+  imgs[card._photoIdx].classList.add('hidden');
+  dots[card._photoIdx] && dots[card._photoIdx].classList.remove('active');
+  card._photoIdx = (card._photoIdx + dir + imgs.length) % imgs.length;
+  imgs[card._photoIdx].classList.remove('hidden');
+  dots[card._photoIdx] && dots[card._photoIdx].classList.add('active');
+}
+
+// ============================================================
+// DRAG + TAP
+// ============================================================
+function bindDrag(card) {
+  card.addEventListener('mousedown', onStart, {passive:false});
+  card.addEventListener('touchstart', onStart, {passive:false});
+}
+
+function onStart(e) {
+  if (!frontCard) return;
+  dragging = true;
+  touchStartTime = Date.now();
+  frontCard.classList.add('grabbing');
+  frontCard.style.transition = 'none';
+  const pt = e.touches ? e.touches[0] : e;
+  startX = pt.clientX; startY = pt.clientY;
+  deltaX = 0; deltaY = 0;
+  document.addEventListener('mousemove', onMove, {passive:false});
+  document.addEventListener('touchmove', onMove, {passive:false});
+  document.addEventListener('mouseup', onEnd);
+  document.addEventListener('touchend', onEnd);
+}
+
+function onMove(e) {
+  if (!dragging || !frontCard) return;
+  e.preventDefault();
+  const pt = e.touches ? e.touches[0] : e;
+  deltaX = pt.clientX - startX;
+  deltaY = pt.clientY - startY;
+  const rot = deltaX * 0.07;
+  frontCard.style.transform = `translate(${deltaX}px,${deltaY}px) rotate(${rot}deg)`;
+  const op = Math.min(Math.abs(deltaX) / 70, 1);
+  frontCard.querySelector('.stamp-smash').style.opacity = deltaX > 0 ? op : 0;
+  frontCard.querySelector('.stamp-pass').style.opacity  = deltaX < 0 ? op : 0;
+}
+
+function onEnd(e) {
+  if (!dragging) return;
+  dragging = false;
+  frontCard && frontCard.classList.remove('grabbing');
+  document.removeEventListener('mousemove', onMove);
+  document.removeEventListener('touchmove', onMove);
+  document.removeEventListener('mouseup', onEnd);
+  document.removeEventListener('touchend', onEnd);
+  if (!frontCard) return;
+
+  const elapsed = Date.now() - touchStartTime;
+  const wasTap  = elapsed < 220 && Math.abs(deltaX) < 8 && Math.abs(deltaY) < 8;
+
+  if (wasTap) {
+    // detect which tap zone was hit
+    const pt = e.changedTouches ? e.changedTouches[0] : e;
+    const zone = document.elementFromPoint(pt.clientX, pt.clientY);
+    if (zone && zone.dataset.dir) {
+      cyclePhoto(frontCard, parseInt(zone.dataset.dir));
+    }
+    // snap back cleanly
+    frontCard.style.transform = '';
+    return;
+  }
+
+  if      (deltaX >  80) flyAway(1);
+  else if (deltaX < -80) flyAway(-1);
+  else {
+    frontCard.style.transition = 'transform .45s cubic-bezier(.25,.46,.45,.94)';
+    frontCard.style.transform = '';
+    frontCard.querySelector('.stamp-smash').style.opacity = 0;
+    frontCard.querySelector('.stamp-pass').style.opacity  = 0;
+  }
+}
+
+// ============================================================
+// FLY AWAY
+// ============================================================
+function flyAway(dir) {
+  if (!frontCard) return;
+  const card = frontCard;
+  const isSmash = dir > 0;
+
+  card.querySelector('.stamp-smash').style.opacity = isSmash ? 1 : 0;
+  card.querySelector('.stamp-pass').style.opacity  = isSmash ? 0 : 1;
+  card.style.transition = 'transform .4s ease, opacity .4s ease';
+  card.style.transform  = `translate(${dir * window.innerWidth * 1.6}px,-50px) rotate(${dir * 32}deg)`;
+  card.style.opacity    = '0';
+
+  const backCard = document.querySelector('.card-back');
+  if (backCard) backCard.classList.add('up');
+
+  if (isSmash) {
+    smashes++;
+    smashPending = true;
+    showSmashScreen(ALL[idx]);
+    setTimeout(() => { card.remove(); idx++; renderProgress(); smashPending = false; }, 400);
+  } else {
+    passes++;
+    setTimeout(() => { card.remove(); idx++; renderProgress(); renderCards(); }, 400);
+  }
+
+  frontCard = null;
+  document.getElementById('passBtn').disabled = true;
+  document.getElementById('smashBtn').disabled = true;
+}
+
+function handleSmash() { if (!frontCard || dragging) return; deltaX = 200; flyAway(1); }
+function handlePass()  { if (!frontCard || dragging) return; deltaX = -200; flyAway(-1); }
+
+// ============================================================
+// SMASH SCREEN
+// ============================================================
+function showSmashScreen(f) {
+  const photos = f.photos || (f.photo ? [f.photo] : []);
+  document.getElementById('smashName').textContent = f.name;
+  document.getElementById('smashPhoto').src = photos[0] || '';
+  document.getElementById('smashScreen').classList.add('vis');
+  launchConfetti();
+}
+
+function dismissSmash() {
+  document.getElementById('smashScreen').classList.remove('vis');
+  document.getElementById('passBtn').disabled = false;
+  document.getElementById('smashBtn').disabled = false;
+  if (!smashPending) {
+    if (idx < ALL.length) renderCards(); else showResults();
+  } else {
+    setTimeout(() => {
+      if (!smashPending) { if (idx < ALL.length) renderCards(); else showResults(); }
+    }, 80);
+  }
+}
+
+// ============================================================
+// CONFETTI
+// ============================================================
+function launchConfetti() {
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  const cols = ['#ff4b8b','#ff7a5a','#ffcc00','#00e676','#00b4ff','#c44dff','#fff'];
+  const particles = Array.from({length:130}, () => ({
+    x:Math.random()*canvas.width, y:-20-Math.random()*80,
+    r:5+Math.random()*7, c:cols[Math.floor(Math.random()*cols.length)],
+    vy:3.5+Math.random()*4, vx:(Math.random()-.5)*2,
+    spin:(Math.random()-.5)*.15, angle:Math.random()*Math.PI*2,
+  }));
+  let raf;
+  (function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    let alive = false;
+    particles.forEach(p => {
+      p.y+=p.vy; p.x+=p.vx+Math.sin(p.y*.03)*1.5; p.angle+=p.spin;
+      if(p.y<canvas.height+20) alive=true;
+      const alpha=Math.max(0,1-p.y/(canvas.height*1.05));
+      ctx.save(); ctx.globalAlpha=alpha; ctx.fillStyle=p.c;
+      ctx.translate(p.x,p.y); ctx.rotate(p.angle);
+      ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6); ctx.restore();
+    });
+    if(alive) raf=requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  })();
+  setTimeout(()=>{ cancelAnimationFrame(raf); ctx.clearRect(0,0,canvas.width,canvas.height); },3500);
+}
+
+// ============================================================
+// RESULTS
+// ============================================================
+function showResults() {
+  document.getElementById('actions').style.visibility = 'hidden';
+  document.getElementById('smashCount').textContent = smashes;
+  document.getElementById('passCount').textContent  = passes;
+  const total = ALL.length, pct = smashes / total;
+  let v;
+  if (pct === 1)     v = `You smashed ALL ${total}. That's not satire, that's a confession. 🚨`;
+  else if (pct >= .7) v = `${smashes} out of ${total}? Your friend group should be concerned.<br>Or flattered. Probably both.`;
+  else if (pct >= .4) v = `${smashes} smash${smashes!==1?'es':''}, ${passes} pass${passes!==1?'es':''}.<br>A truly diplomatic amount of chaos.`;
+  else if (pct > 0)   v = `Only ${smashes}? Suspiciously high standards<br>for someone playing this game. 🤨`;
+  else                v = `Zero smashes. An absolute menace to your own friend group.<br>Seek help. 💀`;
+  document.getElementById('verdict').innerHTML = v;
+  document.getElementById('resultsScreen').classList.add('vis');
+}
+
+function restart() {
+  document.getElementById('resultsScreen').classList.remove('vis');
+  document.getElementById('smashScreen').classList.remove('vis');
+  init();
+}
+
+// ============================================================
+// ADD FRIEND MODAL
+// ============================================================
+let pendingPhotoData = null;
+
+function openAddModal() {
+  pendingPhotoData = null;
+  document.getElementById('addName').value = '';
+  document.getElementById('addAge').value = '';
+  document.getElementById('addBio').value = '';
+  document.getElementById('addTags').value = '';
+  document.getElementById('photoFile').value = '';
+  const pick = document.getElementById('photoPick');
+  pick.querySelectorAll('img').forEach(i => i.remove());
+  pick.querySelector('.photo-pick-label').style.display = 'flex';
+  document.getElementById('addModal').classList.add('vis');
+}
+
+function closeAddModal() {
+  document.getElementById('addModal').classList.remove('vis');
+}
+
+document.getElementById('addModal').addEventListener('click', function(e) {
+  if (e.target === this) closeAddModal();
+});
+
+document.getElementById('photoFile').addEventListener('change', async function() {
+  const file = this.files[0];
+  if (!file) return;
+  pendingPhotoData = await resizePhoto(file, 700);
+  const pick = document.getElementById('photoPick');
+  pick.querySelector('.photo-pick-label').style.display = 'none';
+  pick.querySelectorAll('img').forEach(i => i.remove());
+  const preview = document.createElement('img');
+  preview.src = pendingPhotoData;
+  pick.appendChild(preview);
+});
+
+function resizePhoto(file, maxDim) {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > maxDim || h > maxDim) {
+          if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
+          else       { w = Math.round(w * maxDim / h); h = maxDim; }
+        }
+        const c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(c.toDataURL('image/jpeg', 0.78));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function saveFriend() {
+  const name = document.getElementById('addName').value.trim();
+  if (!name) { showToast('Add a name first!'); return; }
+  if (!pendingPhotoData) { showToast('Add a photo first!'); return; }
+
+  const age      = parseInt(document.getElementById('addAge').value) || null;
+  const bio      = document.getElementById('addBio').value.trim();
+  const tagStr   = document.getElementById('addTags').value.trim();
+  const tags     = tagStr ? tagStr.split(',').map(t => t.trim()).filter(Boolean) : [];
+
+  const friend = { name, age, photos: [pendingPhotoData], distance: 'in your crew', bio, tags };
+  const custom = loadCustom();
+  custom.push(friend);
+  saveCustom(custom);
+
+  closeAddModal();
+  showToast(`${name} added to the deck! 🃏`);
+
+  // Re-init so they appear immediately
+  init();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ============================================================
+// BOOT
+// ============================================================
+document.getElementById('passBtn').onclick  = handlePass;
+document.getElementById('smashBtn').onclick = handleSmash;
+init();
+</script>
+</body>
+</html>
