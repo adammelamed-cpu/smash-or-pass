@@ -219,7 +219,8 @@ body{background:linear-gradient(160deg,#0f0020 0%,#2d0054 50%,#0f0020 100%)}
     <textarea class="mfield" id="addBio" placeholder="Satirical bio... (roast them)" rows="3" maxlength="200"></textarea>
     <input class="mfield" type="text" id="addTags" placeholder="Tags: comma, separated, vibes">
     <button class="save-btn" id="saveBtn" onclick="saveFriend()">Add to Deck 🃏</button>
-    <div class="modal-hint">Saved locally in this browser • Up to 5 photos • Swipeable gallery</div>
+    <button id="deleteBtn" style="display:none;margin-top:8px;width:100%;background:rgba(255,50,50,.12);border:1.5px solid rgba(255,50,50,.35);color:#ff6060;border-radius:50px;padding:11px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit" onclick="deleteCustomProfile(editingCustomIdx)">Remove from deck</button>
+    <div class="modal-hint">Visible to everyone • Up to 5 photos • Swipeable gallery</div>
   </div>
 </div>
 
@@ -301,12 +302,23 @@ const FRIENDS = [
 ];
 
 // ============================================================
-// LOCALSTORAGE — custom friends added via the form
+// PROFILE STORAGE — syncs with /api/profiles, falls back to localStorage
 // ============================================================
+let cloudProfiles = null; // null = not yet loaded
+
+async function fetchCloudProfiles() {
+  try {
+    const res = await fetch('/api/profiles');
+    if (!res.ok) return [];
+    return await res.json();
+  } catch (e) { return []; }
+}
+
 function loadCustom() {
+  if (cloudProfiles !== null) return cloudProfiles;
   try { return JSON.parse(localStorage.getItem('smash-custom') || '[]'); } catch { return []; }
 }
-function saveCustom(arr) { localStorage.setItem('smash-custom', JSON.stringify(arr)); }
+
 function getAllFriends() {
   return [...FRIENDS, ...loadCustom().map((f, i) => ({ ...f, _customIdx: i }))];
 }
@@ -331,6 +343,15 @@ function init() {
   document.getElementById('actions').style.visibility = 'visible';
   renderProgress();
   renderCards();
+  if (cloudProfiles === null) {
+    fetchCloudProfiles().then(profiles => {
+      cloudProfiles = profiles;
+      localStorage.setItem('smash-custom', JSON.stringify(profiles));
+      ALL = getAllFriends();
+      renderProgress();
+      if (idx === 0) renderCards();
+    });
+  }
 }
 
 function renderProgress() {
@@ -691,6 +712,7 @@ function openAddModal() {
   editingCustomIdx = -1;
   document.getElementById('modalTitle').textContent = 'Add a Friend 🃏';
   document.getElementById('saveBtn').textContent = 'Add to Deck 🃏';
+  document.getElementById('deleteBtn').style.display = 'none';
   document.getElementById('addName').value = '';
   document.getElementById('addAge').value = '';
   document.getElementById('addBio').value = '';
@@ -708,6 +730,7 @@ function openEditModal(customIdx) {
   editingCustomIdx = customIdx;
   document.getElementById('modalTitle').textContent = `Edit ${f.name} ✏️`;
   document.getElementById('saveBtn').textContent = 'Save Changes ✓';
+  document.getElementById('deleteBtn').style.display = 'block';
   document.getElementById('addName').value = f.name || '';
   document.getElementById('addAge').value = f.age || '';
   document.getElementById('addBio').value = f.bio || '';
@@ -715,6 +738,19 @@ function openEditModal(customIdx) {
   document.getElementById('photoFile').value = '';
   renderPhotoGrid();
   document.getElementById('addModal').classList.add('vis');
+}
+
+async function deleteCustomProfile(customIdx) {
+  if (!confirm('Remove this profile from the deck?')) return;
+  const custom = loadCustom();
+  const f = custom[customIdx];
+  if (!f) return;
+  if (f.id) {
+    await fetch(`/api/profiles?id=${f.id}`, { method: 'DELETE' });
+  }
+  cloudProfiles = null;
+  showToast(`${f.name} removed 👋`);
+  init();
 }
 
 function closeAddModal() {
@@ -756,31 +792,46 @@ function resizePhoto(file, maxDim) {
   });
 }
 
-function saveFriend() {
+async function saveFriend() {
   const name = document.getElementById('addName').value.trim();
   if (!name) { showToast('Add a name first!'); return; }
   if (pendingPhotos.length === 0) { showToast('Add at least one photo!'); return; }
+
+  const saveBtn = document.getElementById('saveBtn');
+  saveBtn.disabled = true;
+  saveBtn.textContent = 'Saving…';
 
   const age    = parseInt(document.getElementById('addAge').value) || null;
   const bio    = document.getElementById('addBio').value.trim();
   const tagStr = document.getElementById('addTags').value.trim();
   const tags   = tagStr ? tagStr.split(',').map(t => t.trim()).filter(Boolean) : [];
-
   const friend = { name, age, photos: [...pendingPhotos], distance: 'in your crew', bio, tags };
-  const custom = loadCustom();
-  if (editingCustomIdx >= 0) {
-    custom[editingCustomIdx] = friend;
-    saveCustom(custom);
-    closeAddModal();
-    showToast(`${name} updated! ✏️`);
-  } else {
-    custom.push(friend);
-    saveCustom(custom);
-    closeAddModal();
-    showToast(`${name} added to the deck! 🃏`);
+
+  try {
+    if (editingCustomIdx >= 0) {
+      const existing = loadCustom()[editingCustomIdx];
+      const body = existing?.id ? { ...friend, id: existing.id } : friend;
+      if (existing?.id) {
+        await fetch('/api/profiles', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      } else {
+        await fetch('/api/profiles', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(friend) });
+      }
+      showToast(`${name} updated! ✏️`);
+    } else {
+      await fetch('/api/profiles', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(friend) });
+      showToast(`${name} added to the deck! 🃏`);
+    }
+  } catch (e) {
+    showToast('Saved locally (offline mode)');
+    const custom = loadCustom();
+    if (editingCustomIdx >= 0) custom[editingCustomIdx] = friend; else custom.push(friend);
+    localStorage.setItem('smash-custom', JSON.stringify(custom));
+    cloudProfiles = custom;
   }
 
-  // Re-init so they appear immediately
+  cloudProfiles = null;
+  closeAddModal();
+  saveBtn.disabled = false;
   init();
 }
 
