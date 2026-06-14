@@ -284,7 +284,7 @@ function getAllFriends() {
 // ============================================================
 // STATE
 // ============================================================
-let ALL = [], idx = 0, smashes = 0, passes = 0;
+let ALL = [], idx = 0, smashes = 0, passes = 0, smashedNames = [];
 let dragging = false, startX = 0, startY = 0, deltaX = 0, deltaY = 0;
 let touchStartTime = 0;
 let frontCard = null, smashPending = false;
@@ -297,7 +297,7 @@ let editingCustomIdx = -1;
 // ============================================================
 function init() {
   ALL = getAllFriends();
-  idx = 0; smashes = 0; passes = 0; smashPending = false;
+  idx = 0; smashes = 0; passes = 0; smashPending = false; smashedNames = [];
   document.getElementById('actions').style.visibility = 'visible';
   renderProgress();
   renderCards();
@@ -453,6 +453,9 @@ function onMove(e) {
   const op = Math.min(Math.abs(deltaX) / 70, 1);
   frontCard.querySelector('.stamp-smash').style.opacity = deltaX > 0 ? op : 0;
   frontCard.querySelector('.stamp-pass').style.opacity  = deltaX < 0 ? op : 0;
+  if (deltaX > 0) frontCard.style.boxShadow = `0 0 ${40 * op}px ${16 * op}px rgba(0,230,118,${0.55 * op}), 0 24px 64px rgba(0,0,0,.55)`;
+  else if (deltaX < 0) frontCard.style.boxShadow = `0 0 ${40 * op}px ${16 * op}px rgba(255,23,68,${0.55 * op}), 0 24px 64px rgba(0,0,0,.55)`;
+  else frontCard.style.boxShadow = '';
 }
 
 function onEnd(e) {
@@ -483,8 +486,9 @@ function onEnd(e) {
   if      (deltaX >  80) flyAway(1);
   else if (deltaX < -80) flyAway(-1);
   else {
-    frontCard.style.transition = 'transform .45s cubic-bezier(.25,.46,.45,.94)';
+    frontCard.style.transition = 'transform .45s cubic-bezier(.25,.46,.45,.94), box-shadow .35s ease';
     frontCard.style.transform = '';
+    frontCard.style.boxShadow = '';
     frontCard.querySelector('.stamp-smash').style.opacity = 0;
     frontCard.querySelector('.stamp-pass').style.opacity  = 0;
   }
@@ -509,6 +513,7 @@ function flyAway(dir) {
 
   if (isSmash) {
     smashes++;
+    smashedNames.push(ALL[idx].name);
     smashPending = true;
     showSmashScreen(ALL[idx]);
     setTimeout(() => { card.remove(); idx++; renderProgress(); smashPending = false; }, 400);
@@ -589,12 +594,27 @@ function showResults() {
   document.getElementById('smashCount').textContent = smashes;
   document.getElementById('passCount').textContent  = passes;
   const total = ALL.length, pct = smashes / total;
+  const s = smashedNames, passedNames = ALL.map(f => f.name).filter(n => !s.includes(n));
   let v;
-  if (pct === 1)     v = `You smashed ALL ${total}. That's not satire, that's a confession. 🚨`;
-  else if (pct >= .7) v = `${smashes} out of ${total}? Your friend group should be concerned.<br>Or flattered. Probably both.`;
-  else if (pct >= .4) v = `${smashes} smash${smashes!==1?'es':''}, ${passes} pass${passes!==1?'es':''}.<br>A truly diplomatic amount of chaos.`;
-  else if (pct > 0)   v = `Only ${smashes}? Suspiciously high standards<br>for someone playing this game. 🤨`;
-  else                v = `Zero smashes. An absolute menace to your own friend group.<br>Seek help. 💀`;
+  if (pct === 1) {
+    v = `You smashed ALL ${total}. Every single one. This isn't a friend group, it's a situation. 🚨`;
+  } else if (s.length === 0) {
+    v = `Zero smashes. You looked ${total} friends in the eye and chose violence.<br>Seek help. 💀`;
+  } else if (s.includes('Alexandra') && s.includes('Brycee')) {
+    v = `You smashed Alexandra AND Brycee?? One's newly unleashed and the other is literally taken.<br>Bold. Chaotic. Iconic. 😭`;
+  } else if (s.includes('Adam')) {
+    v = `You smashed Adam. He <em>built</em> this app. He's going to find out. 🤓`;
+  } else if (s.includes('Alexandra') && !s.includes('Brycee')) {
+    v = `Smashed Alexandra, passed Brycee. Smart — you respect committed relationships.<br>Or you just like cigars. 🍬`;
+  } else if (s.includes('Brycee') && !s.includes('Alexandra')) {
+    v = `You smashed Brycee, who is <em>taken</em>. Passed Alexandra, who is single.<br>Your logic is fascinating. 💅`;
+  } else if (s.includes('Everett')) {
+    v = `You smashed Everett. He's going to tell you a 40-minute story about this moment.<br>At a bar. Tonight. 🍺`;
+  } else if (pct >= .5) {
+    v = `${s.join(' & ')} got the smash. ${passedNames.join(' & ')} got the cold shoulder.<br>A controversial but defensible ranking.`;
+  } else {
+    v = `Only ${s.join(' & ')}? Your standards are suspiciously high<br>for someone playing this game. 🤨`;
+  }
   document.getElementById('verdict').innerHTML = v;
   document.getElementById('resultsScreen').classList.add('vis');
 }
