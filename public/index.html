@@ -19,6 +19,23 @@ body{background:linear-gradient(160deg,#0f0020 0%,#2d0054 50%,#0f0020 100%)}
 .hdr-sub{font-size:11px;color:rgba(255,255,255,.32);letter-spacing:.18em;text-transform:uppercase;margin-top:2px}
 .add-btn{position:absolute;right:0;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,75,139,.15);border:1.5px solid rgba(255,75,139,.45);color:#ff4b8b;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;padding-bottom:1px}
 .add-btn:hover{background:rgba(255,75,139,.3)}
+.lb-btn{position:absolute;left:0;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,204,0,.12);border:1.5px solid rgba(255,204,0,.4);color:#ffcc00;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.lb-btn:hover{background:rgba(255,204,0,.25)}
+#lbModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:560;align-items:flex-end;justify-content:center}
+#lbModal.vis{display:flex}
+.lb-inner{background:linear-gradient(160deg,#1a0035,#2d0054);border-radius:28px 28px 0 0;width:100%;max-width:430px;padding:24px 20px 36px;max-height:80vh;overflow-y:auto}
+.lb-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.lb-title{font-size:20px;font-weight:900;color:#fff}
+.lb-close{background:rgba(255,255,255,.1);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+.lb-row{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:14px;margin-bottom:8px;background:rgba(255,255,255,.06)}
+.lb-rank{font-size:22px;width:32px;text-align:center;flex-shrink:0}
+.lb-name{font-size:15px;font-weight:800;color:#fff;flex:1}
+.lb-bar-wrap{flex:2;height:8px;background:rgba(255,255,255,.1);border-radius:50px;overflow:hidden}
+.lb-bar{height:100%;border-radius:50px;background:linear-gradient(90deg,#ff4b8b,#ff7a5a);transition:width .6s ease}
+.lb-count{font-size:14px;font-weight:800;color:#ff4b8b;min-width:28px;text-align:right}
+.lb-empty{text-align:center;color:rgba(255,255,255,.35);font-size:14px;padding:24px 0}
+.lb-clear{margin-top:16px;width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.45);border-radius:50px;padding:10px;font-size:13px;cursor:pointer;font-family:inherit;transition:all .2s}
+.lb-clear:hover{background:rgba(255,50,50,.15);border-color:rgba(255,50,50,.4);color:#ff6060}
 
 /* ── progress dots ── */
 .progress{display:flex;justify-content:center;gap:6px;margin-bottom:8px;flex-shrink:0;height:16px;align-items:center}
@@ -142,6 +159,7 @@ body{background:linear-gradient(160deg,#0f0020 0%,#2d0054 50%,#0f0020 100%)}
 <body>
 <div id="app">
   <div class="hdr">
+    <button class="lb-btn" onclick="openLeaderboard()" title="Leaderboard">🏆</button>
     <div class="hdr-logo">Smash or Pass</div>
     <div class="hdr-sub">❄️ Friend Edition ❄️</div>
     <button class="add-btn" onclick="openAddModal()" title="Add a friend">+</button>
@@ -226,6 +244,18 @@ body{background:linear-gradient(160deg,#0f0020 0%,#2d0054 50%,#0f0020 100%)}
     <a href="https://accioagcy-sh7cpuu2.manus.space/" target="_blank" style="display:inline-block;margin-top:14px;background:#1a73e8;color:#fff;border-radius:50px;padding:10px 28px;font-size:14px;font-weight:800;text-decoration:none">Learn More →</a>
   </div>
   <button class="banner-skip" onclick="dismissBanner3()" style="margin-top:18px">Continue →</button>
+</div>
+
+<!-- Leaderboard modal -->
+<div id="lbModal" onclick="if(event.target===this)closeLeaderboard()">
+  <div class="lb-inner">
+    <div class="lb-head">
+      <span class="lb-title">🏆 Smash Leaderboard</span>
+      <button class="lb-close" onclick="closeLeaderboard()">✕</button>
+    </div>
+    <div id="lbList"></div>
+    <button class="lb-clear" onclick="clearLeaderboard()">Reset leaderboard</button>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -514,6 +544,7 @@ function flyAway(dir) {
   if (isSmash) {
     smashes++;
     smashedNames.push(ALL[idx].name);
+    recordSmash(ALL[idx].name);
     smashPending = true;
     showSmashScreen(ALL[idx]);
     setTimeout(() => { card.remove(); idx++; renderProgress(); smashPending = false; }, 400);
@@ -597,23 +628,27 @@ function showResults() {
   const s = smashedNames, passedNames = ALL.map(f => f.name).filter(n => !s.includes(n));
   let v;
   if (pct === 1) {
-    v = `You smashed ALL ${total}. Every single one. This isn't a friend group, it's a situation. 🚨`;
+    v = `ALL ${total}. Every last one. You didn't come here to make friends —<br>you came here to destroy them. Godspeed. 🚨`;
   } else if (s.length === 0) {
-    v = `Zero smashes. You looked ${total} friends in the eye and chose violence.<br>Seek help. 💀`;
+    v = `Zero smashes. You sat down, looked your friends in the face,<br>and said "no thanks" to all of them. Truly diabolical. 💀`;
   } else if (s.includes('Alexandra') && s.includes('Brycee')) {
-    v = `You smashed Alexandra AND Brycee?? One's newly unleashed and the other is literally taken.<br>Bold. Chaotic. Iconic. 😭`;
+    v = `Alexandra AND Brycee?? One just got on Tinder. One has a boyfriend.<br>You said "not my problem" to both. Unhinged energy. 🫠`;
+  } else if (s.includes('Adam') && !s.includes('Alexandra') && !s.includes('Brycee')) {
+    v = `You smashed Adam and nobody else. The man who <em>coded this trap</em>.<br>He put himself in his own app and it worked. Respect. 🤓`;
   } else if (s.includes('Adam')) {
-    v = `You smashed Adam. He <em>built</em> this app. He's going to find out. 🤓`;
+    v = `You smashed Adam. He built this. He's watching the localStorage right now.<br>This is not a drill. 🤓`;
   } else if (s.includes('Alexandra') && !s.includes('Brycee')) {
-    v = `Smashed Alexandra, passed Brycee. Smart — you respect committed relationships.<br>Or you just like cigars. 🍬`;
+    v = `Alexandra: smashed. Brycee: passed. You love a free agent<br>and respect a committed man. Character: established. 🍬`;
   } else if (s.includes('Brycee') && !s.includes('Alexandra')) {
-    v = `You smashed Brycee, who is <em>taken</em>. Passed Alexandra, who is single.<br>Your logic is fascinating. 💅`;
+    v = `Passed Alexandra — single, available, ready. Smashed Brycee — <em>has a boyfriend</em>.<br>You are a menace and you know exactly what you're doing. 💅`;
+  } else if (s.includes('Everett') && s.length === 1) {
+    v = `Just Everett. Only Everett. He is going to make this his whole personality<br>and tell the story at every bar for the next six months. 🍺`;
   } else if (s.includes('Everett')) {
-    v = `You smashed Everett. He's going to tell you a 40-minute story about this moment.<br>At a bar. Tonight. 🍺`;
+    v = `${s.join(' & ')} made the cut. Everett is already texting people about this.<br>You created a monster. 🍺`;
   } else if (pct >= .5) {
-    v = `${s.join(' & ')} got the smash. ${passedNames.join(' & ')} got the cold shoulder.<br>A controversial but defensible ranking.`;
+    v = `${s.join(' & ')} got the smash. ${passedNames.join(' & ')} got publicly humiliated.<br>A chaotic but deeply personal ranking.`;
   } else {
-    v = `Only ${s.join(' & ')}? Your standards are suspiciously high<br>for someone playing this game. 🤨`;
+    v = `Only ${s.join(' & ')} survived your judgment. Everyone else was found<br>not smashable at this time. Brutal. 🤨`;
   }
   document.getElementById('verdict').innerHTML = v;
   document.getElementById('resultsScreen').classList.add('vis');
@@ -754,6 +789,46 @@ function showToast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ============================================================
+// LEADERBOARD
+// ============================================================
+function loadLB() { try { return JSON.parse(localStorage.getItem('smash-lb') || '{}'); } catch(e) { return {}; } }
+function saveLB(lb) { localStorage.setItem('smash-lb', JSON.stringify(lb)); }
+
+function recordSmash(name) {
+  const lb = loadLB();
+  lb[name] = (lb[name] || 0) + 1;
+  saveLB(lb);
+}
+
+function openLeaderboard() {
+  const lb = loadLB();
+  const entries = Object.entries(lb).sort((a, b) => b[1] - a[1]);
+  const medals = ['🥇','🥈','🥉'];
+  const max = entries.length ? entries[0][1] : 1;
+  const list = document.getElementById('lbList');
+  if (!entries.length) {
+    list.innerHTML = '<div class="lb-empty">No smashes yet.<br>Get out there. 😤</div>';
+  } else {
+    list.innerHTML = entries.map(([name, count], i) => `
+      <div class="lb-row">
+        <div class="lb-rank">${medals[i] || `#${i+1}`}</div>
+        <div class="lb-name">${name}</div>
+        <div class="lb-bar-wrap"><div class="lb-bar" style="width:${Math.round(count/max*100)}%"></div></div>
+        <div class="lb-count">${count}</div>
+      </div>`).join('');
+  }
+  document.getElementById('lbModal').classList.add('vis');
+}
+
+function closeLeaderboard() { document.getElementById('lbModal').classList.remove('vis'); }
+
+function clearLeaderboard() {
+  if (!confirm('Reset the leaderboard? This can\'t be undone.')) return;
+  localStorage.removeItem('smash-lb');
+  openLeaderboard();
 }
 
 // ============================================================
