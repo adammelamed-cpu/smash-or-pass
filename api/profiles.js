@@ -2,20 +2,8 @@ const { put, list } = require('@vercel/blob');
 
 const BLOB_NAME = 'smash-profiles.json';
 
-// Vercel names the token BLOB_READ_WRITE_TOKEN, but when a store is connected
-// it can also be suffixed with the store name (e.g. BLOB_READ_WRITE_TOKEN_XYZ).
-// Find whichever one exists.
-function getToken() {
-  if (process.env.BLOB_READ_WRITE_TOKEN) return process.env.BLOB_READ_WRITE_TOKEN;
-  const key = Object.keys(process.env).find(
-    k => k.includes('BLOB') && k.includes('READ_WRITE_TOKEN')
-  );
-  return key ? process.env[key] : undefined;
-}
-
 async function readProfiles() {
-  const token = getToken();
-  const { blobs } = await list({ prefix: BLOB_NAME, token });
+  const { blobs } = await list({ prefix: BLOB_NAME });
   if (!blobs.length) return [];
   const res = await fetch(blobs[0].url, { cache: 'no-store' });
   if (!res.ok) return [];
@@ -23,12 +11,10 @@ async function readProfiles() {
 }
 
 async function writeProfiles(profiles) {
-  const token = getToken();
   await put(BLOB_NAME, JSON.stringify(profiles), {
     access: 'public',
     contentType: 'application/json',
     addRandomSuffix: false,
-    token,
   });
 }
 
@@ -41,15 +27,10 @@ module.exports = async function handler(req, res) {
 
   // ── DIAGNOSTIC ENDPOINT: /api/profiles?debug=1 ──────────────
   if (req.method === 'GET' && req.query && req.query.debug) {
-    const token = getToken();
     const blobEnvKeys = Object.keys(process.env).filter(k => k.includes('BLOB'));
-    const diag = {
-      tokenFound: !!token,
-      tokenPrefix: token ? token.slice(0, 18) + '…' : null,
-      blobEnvVarNames: blobEnvKeys,
-    };
+    const diag = { blobEnvVarNames: blobEnvKeys };
     try {
-      const { blobs } = await list({ prefix: BLOB_NAME, token });
+      const { blobs } = await list({ prefix: BLOB_NAME });
       diag.listOk = true;
       diag.blobCount = blobs.length;
       if (blobs.length) {
@@ -61,7 +42,25 @@ module.exports = async function handler(req, res) {
       }
     } catch (e) {
       diag.listOk = false;
-      diag.error = e.message;
+      diag.listError = e.message;
+    }
+    try {
+      const testPayload = [{ _test: true, ts: Date.now() }];
+      await put(BLOB_NAME, JSON.stringify(testPayload), {
+        access: 'public',
+        contentType: 'application/json',
+        addRandomSuffix: false,
+      });
+      diag.putOk = true;
+      // Clean up: write back empty array
+      await put(BLOB_NAME, JSON.stringify([]), {
+        access: 'public',
+        contentType: 'application/json',
+        addRandomSuffix: false,
+      });
+    } catch (e) {
+      diag.putOk = false;
+      diag.putError = e.message;
     }
     return res.status(200).json(diag);
   }
