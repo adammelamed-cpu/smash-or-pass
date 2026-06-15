@@ -345,8 +345,16 @@ function init() {
   renderCards();
   if (cloudProfiles === null) {
     fetchCloudProfiles().then(profiles => {
-      cloudProfiles = profiles;
-      localStorage.setItem('smash-custom', JSON.stringify(profiles));
+      const local = (() => { try { return JSON.parse(localStorage.getItem('smash-custom') || '[]'); } catch { return []; } })();
+      // Merge: if cloud returned profiles use them; if cloud empty but local has data, keep local
+      if (profiles.length > 0) {
+        cloudProfiles = profiles;
+        localStorage.setItem('smash-custom', JSON.stringify(profiles));
+      } else if (local.length > 0) {
+        cloudProfiles = local;
+      } else {
+        cloudProfiles = [];
+      }
       ALL = getAllFriends();
       renderProgress();
       if (idx === 0) renderCards();
@@ -807,29 +815,46 @@ async function saveFriend() {
   const tags   = tagStr ? tagStr.split(',').map(t => t.trim()).filter(Boolean) : [];
   const friend = { name, age, photos: [...pendingPhotos], distance: 'in your crew', bio, tags };
 
-  try {
-    if (editingCustomIdx >= 0) {
-      const existing = loadCustom()[editingCustomIdx];
-      const body = existing?.id ? { ...friend, id: existing.id } : friend;
-      if (existing?.id) {
-        await fetch('/api/profiles', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-      } else {
-        await fetch('/api/profiles', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(friend) });
-      }
-      showToast(`${name} updated! ✏️`);
-    } else {
-      await fetch('/api/profiles', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(friend) });
-      showToast(`${name} added to the deck! 🃏`);
-    }
-  } catch (e) {
-    showToast('Saved locally (offline mode)');
+  const saveToLocal = () => {
     const custom = loadCustom();
     if (editingCustomIdx >= 0) custom[editingCustomIdx] = friend; else custom.push(friend);
     localStorage.setItem('smash-custom', JSON.stringify(custom));
     cloudProfiles = custom;
+  };
+
+  try {
+    let res;
+    if (editingCustomIdx >= 0) {
+      const existing = loadCustom()[editingCustomIdx];
+      const body = existing?.id ? { ...friend, id: existing.id } : friend;
+      if (existing?.id) {
+        res = await fetch('/api/profiles', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      } else {
+        res = await fetch('/api/profiles', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(friend) });
+      }
+      if (res && res.ok) {
+        showToast(`${name} updated! ✏️`);
+      } else {
+        saveToLocal();
+        showToast(`${name} updated! ✏️`);
+      }
+    } else {
+      res = await fetch('/api/profiles', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(friend) });
+      if (res && res.ok) {
+        showToast(`${name} added to the deck! 🃏`);
+      } else {
+        saveToLocal();
+        showToast(`${name} added to the deck! 🃏`);
+      }
+    }
+  } catch (e) {
+    saveToLocal();
+    showToast(`${name} added to the deck! 🃏`);
   }
 
-  cloudProfiles = null;
+  // If we saved to cloud successfully, null out so init() re-fetches the authoritative list.
+  // If we fell back to local, cloudProfiles is already set — don't null it or init() will re-fetch (and get []).
+  if (typeof res !== 'undefined' && res && res.ok) cloudProfiles = null;
   closeAddModal();
   saveBtn.disabled = false;
   init();
