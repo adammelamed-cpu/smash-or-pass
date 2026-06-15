@@ -27,6 +27,7 @@ module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('X-Blob-Token', process.env.BLOB_READ_WRITE_TOKEN ? 'present' : 'missing');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   if (req.method === 'GET') {
