@@ -1,18 +1,18 @@
-const { put, list } = require('@vercel/blob');
+const { put, list, get } = require('@vercel/blob');
 
 const BLOB_NAME = 'smash-profiles.json';
 
 async function readProfiles() {
   const { blobs } = await list({ prefix: BLOB_NAME });
   if (!blobs.length) return [];
-  const res = await fetch(blobs[0].url, { cache: 'no-store' });
+  const res = await get(blobs[0].url, { access: 'private' });
   if (!res.ok) return [];
   return await res.json();
 }
 
 async function writeProfiles(profiles) {
   await put(BLOB_NAME, JSON.stringify(profiles), {
-    access: 'public',
+    access: 'private',
     contentType: 'application/json',
     addRandomSuffix: false,
   });
@@ -33,13 +33,6 @@ module.exports = async function handler(req, res) {
       const { blobs } = await list({ prefix: BLOB_NAME });
       diag.listOk = true;
       diag.blobCount = blobs.length;
-      if (blobs.length) {
-        diag.blobUrl = blobs[0].url;
-        const r = await fetch(blobs[0].url, { cache: 'no-store' });
-        diag.fetchStatus = r.status;
-        const data = await r.json().catch(() => null);
-        diag.profileCount = Array.isArray(data) ? data.length : 'not-an-array';
-      }
     } catch (e) {
       diag.listOk = false;
       diag.listError = e.message;
@@ -47,20 +40,35 @@ module.exports = async function handler(req, res) {
     try {
       const testPayload = [{ _test: true, ts: Date.now() }];
       await put(BLOB_NAME, JSON.stringify(testPayload), {
-        access: 'public',
+        access: 'private',
         contentType: 'application/json',
         addRandomSuffix: false,
       });
       diag.putOk = true;
-      // Clean up: write back empty array
-      await put(BLOB_NAME, JSON.stringify([]), {
-        access: 'public',
-        contentType: 'application/json',
-        addRandomSuffix: false,
-      });
     } catch (e) {
       diag.putOk = false;
       diag.putError = e.message;
+    }
+    if (diag.putOk) {
+      try {
+        const { blobs } = await list({ prefix: BLOB_NAME });
+        if (blobs.length) {
+          const r = await get(blobs[0].url, { access: 'private' });
+          const data = await r.json().catch(() => null);
+          diag.getOk = r.ok;
+          diag.readProfileCount = Array.isArray(data) ? data.length : 'not-an-array';
+        }
+        // Clean up test data
+        await put(BLOB_NAME, JSON.stringify([]), {
+          access: 'private',
+          contentType: 'application/json',
+          addRandomSuffix: false,
+        });
+        diag.cleanupOk = true;
+      } catch (e) {
+        diag.getOk = false;
+        diag.getError = e.message;
+      }
     }
     return res.status(200).json(diag);
   }
