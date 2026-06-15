@@ -834,6 +834,7 @@ async function saveFriend() {
     cloudProfiles = custom;
   };
 
+  let cloudSaved = false;
   try {
     let res;
     if (editingCustomIdx >= 0) {
@@ -844,29 +845,19 @@ async function saveFriend() {
       } else {
         res = await fetch('/api/profiles', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(friend) });
       }
-      if (res && res.ok) {
-        showToast(`${name} updated! ✏️`);
-      } else {
-        saveToLocal();
-        showToast(`${name} updated! ✏️`);
-      }
+      if (res && res.ok) { cloudSaved = true; showToast(`${name} updated! ✏️`); }
+      else { saveToLocal(); showToast(`${name} updated! ✏️`); }
     } else {
       res = await fetch('/api/profiles', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(friend) });
-      if (res && res.ok) {
-        showToast(`${name} added to the deck! 🃏`);
-      } else {
-        saveToLocal();
-        showToast(`${name} added to the deck! 🃏`);
-      }
+      if (res && res.ok) { cloudSaved = true; showToast(`${name} added to the deck! 🃏`); }
+      else { saveToLocal(); showToast(`${name} added to the deck! 🃏`); }
     }
   } catch (e) {
     saveToLocal();
     showToast(`${name} added to the deck! 🃏`);
   }
 
-  // If we saved to cloud successfully, null out so init() re-fetches the authoritative list.
-  // If we fell back to local, cloudProfiles is already set — don't null it or init() will re-fetch (and get []).
-  if (typeof res !== 'undefined' && res && res.ok) cloudProfiles = null;
+  if (cloudSaved) cloudProfiles = null;
   closeAddModal();
   saveBtn.disabled = false;
   init();
