@@ -16,6 +16,7 @@ async function writeProfiles(profiles) {
     access: 'private',
     contentType: 'application/json',
     addRandomSuffix: false,
+    allowOverwrite: true,
   });
 }
 
@@ -44,6 +45,7 @@ module.exports = async function handler(req, res) {
         access: 'private',
         contentType: 'application/json',
         addRandomSuffix: false,
+        allowOverwrite: true,
       });
       diag.putOk = true;
     } catch (e) {
@@ -64,6 +66,7 @@ module.exports = async function handler(req, res) {
           access: 'private',
           contentType: 'application/json',
           addRandomSuffix: false,
+          allowOverwrite: true,
         });
         diag.cleanupOk = true;
       } catch (e) {
