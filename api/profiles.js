@@ -5,9 +5,10 @@ const BLOB_NAME = 'smash-profiles.json';
 async function readProfiles() {
   const { blobs } = await list({ prefix: BLOB_NAME });
   if (!blobs.length) return [];
-  const res = await get(blobs[0].url, { access: 'private' });
-  if (!res.ok) return [];
-  return await res.json();
+  const result = await get(blobs[0].url, { access: 'private' });
+  if (!result || !result.stream) return [];
+  const data = await new Response(result.stream).json();
+  return Array.isArray(data) ? data : [];
 }
 
 async function writeProfiles(profiles) {
@@ -54,8 +55,8 @@ module.exports = async function handler(req, res) {
         const { blobs } = await list({ prefix: BLOB_NAME });
         if (blobs.length) {
           const r = await get(blobs[0].url, { access: 'private' });
-          const data = await r.json().catch(() => null);
-          diag.getOk = r.ok;
+          const data = r && r.stream ? await new Response(r.stream).json() : null;
+          diag.getOk = !!(r && r.stream);
           diag.readProfileCount = Array.isArray(data) ? data.length : 'not-an-array';
         }
         // Clean up test data
