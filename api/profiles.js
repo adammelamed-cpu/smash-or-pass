@@ -28,51 +28,41 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   // ── DIAGNOSTIC ENDPOINT: /api/profiles?debug=1 ──────────────
+  // NON-DESTRUCTIVE: reports the live profile count and round-trips a
+  // SEPARATE throwaway file so it never touches real profile data.
   if (req.method === 'GET' && req.query && req.query.debug) {
     const blobEnvKeys = Object.keys(process.env).filter(k => k.includes('BLOB'));
     const diag = { blobEnvVarNames: blobEnvKeys };
+    // 1. Report how many REAL profiles are currently stored (read-only)
     try {
-      const { blobs } = await list({ prefix: BLOB_NAME });
-      diag.listOk = true;
-      diag.blobCount = blobs.length;
+      const profiles = await readProfiles();
+      diag.liveProfileCount = profiles.length;
+      diag.liveProfileNames = profiles.map(p => p.name);
     } catch (e) {
-      diag.listOk = false;
-      diag.listError = e.message;
+      diag.liveProfileCount = 'read-error';
+      diag.liveReadError = e.message;
     }
+    // 2. Round-trip a throwaway test file (does NOT touch smash-profiles.json)
+    const TEST_NAME = 'smash-debug-test.json';
     try {
-      const testPayload = [{ _test: true, ts: Date.now() }];
-      await put(BLOB_NAME, JSON.stringify(testPayload), {
+      await put(TEST_NAME, JSON.stringify([{ _test: true, ts: Date.now() }]), {
         access: 'private',
         contentType: 'application/json',
         addRandomSuffix: false,
         allowOverwrite: true,
       });
       diag.putOk = true;
-    } catch (e) {
-      diag.putOk = false;
-      diag.putError = e.message;
-    }
-    if (diag.putOk) {
-      try {
-        const { blobs } = await list({ prefix: BLOB_NAME });
-        if (blobs.length) {
-          const r = await get(blobs[0].url, { access: 'private' });
-          const data = r && r.stream ? await new Response(r.stream).json() : null;
-          diag.getOk = !!(r && r.stream);
-          diag.readProfileCount = Array.isArray(data) ? data.length : 'not-an-array';
-        }
-        // Clean up test data
-        await put(BLOB_NAME, JSON.stringify([]), {
-          access: 'private',
-          contentType: 'application/json',
-          addRandomSuffix: false,
-          allowOverwrite: true,
-        });
-        diag.cleanupOk = true;
-      } catch (e) {
-        diag.getOk = false;
-        diag.getError = e.message;
+      const { blobs } = await list({ prefix: TEST_NAME });
+      if (blobs.length) {
+        const r = await get(blobs[0].url, { access: 'private' });
+        const data = r && r.stream ? await new Response(r.stream).json() : null;
+        diag.getOk = !!(r && r.stream);
+        diag.getReadOk = Array.isArray(data) && data.length === 1;
       }
+    } catch (e) {
+      diag.putOk = diag.putOk || false;
+      diag.getOk = false;
+      diag.testError = e.message;
     }
     return res.status(200).json(diag);
   }
