@@ -845,16 +845,16 @@ async function saveFriend() {
       } else {
         res = await fetch('/api/profiles', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(friend) });
       }
-      if (res && res.ok) { cloudSaved = true; showToast(`${name} updated! ✏️`); }
-      else { saveToLocal(); showToast(`${name} updated! ✏️`); }
+      if (res && res.ok) { cloudSaved = true; showToast(`${name} updated for everyone! ✏️`); }
+      else { saveToLocal(); showToast(`⚠️ ${name} saved on this device only`); }
     } else {
       res = await fetch('/api/profiles', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(friend) });
-      if (res && res.ok) { cloudSaved = true; showToast(`${name} added to the deck! 🃏`); }
-      else { saveToLocal(); showToast(`${name} added to the deck! 🃏`); }
+      if (res && res.ok) { cloudSaved = true; showToast(`${name} added for everyone! 🃏`); }
+      else { saveToLocal(); showToast(`⚠️ ${name} saved on this device only`); }
     }
   } catch (e) {
     saveToLocal();
-    showToast(`${name} added to the deck! 🃏`);
+    showToast(`⚠️ ${name} saved on this device only`);
   }
 
   if (cloudSaved) cloudProfiles = null;
