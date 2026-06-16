@@ -331,6 +331,10 @@ function getAllFriends() {
   const builtInNames = new Set(FRIENDS.map(f => f.name.toLowerCase()));
   const custom = loadCustom()
     .map((f, i) => ({ ...f, _customIdx: i }))
+    // Drop malformed entries (missing/blank name or no photos) so one bad
+    // record can't crash the whole deck.
+    .filter(f => f && typeof f.name === 'string' && f.name.trim()
+                 && Array.isArray(f.photos) && f.photos.length > 0)
     .filter(f => !builtInNames.has(f.name.toLowerCase()));
   return [...FRIENDS, ...custom];
 }
