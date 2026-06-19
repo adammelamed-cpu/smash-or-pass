@@ -18,6 +18,8 @@ body{background:linear-gradient(160deg,#0f0020 0%,#2d0054 50%,#0f0020 100%)}
 .hdr-logo{font-size:28px;font-weight:900;background:linear-gradient(90deg,#ff4b8b 0%,#ff8a5a 60%,#ff4b8b 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.5px}
 .hdr-sub{font-size:11px;color:rgba(255,255,255,.32);letter-spacing:.18em;text-transform:uppercase;margin-top:2px}
 .add-btn{position:absolute;right:0;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,75,139,.15);border:1.5px solid rgba(255,75,139,.45);color:#ff4b8b;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;padding-bottom:1px}
+.ad-btn{position:absolute;right:42px;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.35);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;padding:0}
+.ad-btn:hover{background:rgba(255,255,255,.14);color:rgba(255,255,255,.6)}
 .add-btn:hover{background:rgba(255,75,139,.3)}
 .lb-btn{position:absolute;left:0;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,204,0,.12);border:1.5px solid rgba(255,204,0,.4);color:#ffcc00;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
 .lb-btn:hover{background:rgba(255,204,0,.25)}
@@ -167,6 +169,7 @@ body{background:linear-gradient(160deg,#0f0020 0%,#2d0054 50%,#0f0020 100%)}
     <div class="hdr-logo">Smash or Pass</div>
     <div class="hdr-sub">❄️ Friend Edition ❄️</div>
     <button class="add-btn" onclick="openAddModal()" title="Add a friend">+</button>
+    <button class="ad-btn" onclick="openAd()" title="Sponsored">📣</button>
   </div>
   <div class="progress" id="progress"></div>
   <div class="card-area" id="cardArea"></div>
@@ -352,7 +355,7 @@ let ALL = [], idx = 0, smashes = 0, passes = 0, smashedNames = [];
 let dragging = false, startX = 0, startY = 0, deltaX = 0, deltaY = 0;
 let touchStartTime = 0;
 let frontCard = null, smashPending = false;
-let bannerShown = false, banner2Shown = false, banner3Shown = false;
+let _adIdx = 0; // cycles through ads on tap
 let pendingPhotos = [];
 let editingCustomIdx = -1;
 
@@ -406,17 +409,22 @@ function _hideStrip(id) {
   const el = document.getElementById(id);
   el.classList.remove('vis');
 }
+const _ADS = ['bannerAd','bannerAd2','bannerAd3'];
+const _DISMISS = [dismissBanner, dismissBanner2, dismissBanner3];
+function openAd() {
+  // hide any currently open strip first
+  _ADS.forEach(id => document.getElementById(id).classList.remove('vis'));
+  _showStrip(_ADS[_adIdx], _DISMISS[_adIdx]);
+  _adIdx = (_adIdx + 1) % _ADS.length;
+}
 function showBannerAd()  { _showStrip('bannerAd',  dismissBanner);  }
-function dismissBanner() { _hideStrip('bannerAd');  renderCards(); }
+function dismissBanner() { _hideStrip('bannerAd');  }
 function showBannerAd2()  { _showStrip('bannerAd2', dismissBanner2); }
-function dismissBanner2() { _hideStrip('bannerAd2'); renderCards(); }
+function dismissBanner2() { _hideStrip('bannerAd2'); }
 function showBannerAd3()  { _showStrip('bannerAd3', dismissBanner3); }
-function dismissBanner3() { _hideStrip('bannerAd3'); renderCards(); }
+function dismissBanner3() { _hideStrip('bannerAd3'); }
 
 function renderCards() {
-  if (idx === 1 && !bannerShown) { bannerShown = true; showBannerAd(); return; }
-  if (idx === 2 && !banner2Shown) { banner2Shown = true; showBannerAd2(); return; }
-  if (idx > 0 && !banner3Shown && ALL[idx - 1] && ALL[idx - 1].name === 'Joshua') { banner3Shown = true; showBannerAd3(); return; }
   const area = document.getElementById('cardArea');
   area.querySelectorAll('.card').forEach(c => c.remove());
   frontCard = null;
