@@ -5,7 +5,11 @@
   "engines": {
     "node": "24.x"
   },
+  "scripts": {
+    "scrape:linkedin": "node scripts/scrape-linkedin.js"
+  },
   "dependencies": {
-    "@vercel/blob": "^2.4.0"
+    "@vercel/blob": "^2.4.0",
+    "apify-client": "^9.0.0"
   }
 }
