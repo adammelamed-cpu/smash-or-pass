@@ -186,8 +186,27 @@ async function main() {
     process.exit(1);
   }
 
-  require('fs').writeFileSync('scraped-profiles.json', JSON.stringify(profiles, null, 2));
+  const fs = require('fs');
+  fs.writeFileSync('scraped-profiles.json', JSON.stringify(profiles, null, 2));
   console.log(`\nSaved ${profiles.length} profile(s) to scraped-profiles.json`);
+
+  // CSV output
+  const csvHeader = 'name,age,bio,tags,photo1,photo2,linkedin_url';
+  const csvRows = profiles.map(p => [
+    p.name,
+    p.age,
+    p.bio,
+    (p.tags || []).join(' | '),
+    p.photos[0] || '',
+    p.photos[1] || '',
+    p.linkedinUrl || '',
+  ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
+  const csv = [csvHeader, ...csvRows].join('\n');
+  fs.writeFileSync('scraped-profiles.csv', csv);
+  console.log(`Saved CSV to scraped-profiles.csv`);
+  console.log('\n--- CSV ---');
+  console.log(csv);
+  console.log('--- END CSV ---');
 
   const apiUrl = process.env.PROFILES_API_URL;
   if (apiUrl) {
