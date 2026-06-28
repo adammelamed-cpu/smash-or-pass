@@ -10,6 +10,6 @@
   },
   "dependencies": {
     "@vercel/blob": "^2.4.0",
-    "apify-client": "^9.0.0"
+    "apify-client": "^2.23.4"
   }
 }
