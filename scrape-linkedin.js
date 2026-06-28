@@ -15,7 +15,7 @@
 const https = require("https");
 const fs = require("fs");
 
-const ACTOR_ID = "2SyF0bVxmgGr8IVCZ";
+const ACTOR_ID = "apify/linkedin-profile-scraper";
 const BASE = "api.apify.com";
 
 const TOKEN =
