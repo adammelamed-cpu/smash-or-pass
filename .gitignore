@@ -3,3 +3,4 @@ package-lock.json
 linkedin-posts.json
 .env
 .env.local
+.claude/settings.local.json
